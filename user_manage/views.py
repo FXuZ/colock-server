@@ -29,7 +29,7 @@ def register(request):
             new_user = reg_form.save(commit=False)
             new_user.reg_time = timezone.now()
             new_user.ukey = user_key_gen(new_user.id, new_user.region_num, new_user.phone_num, new_user.reg_time)
-            new_user.save
+            new_user.save()
 
             return_value = {'uid': new_user.id, 'ukey': new_user.ukey}
             # ensure_ascii=False to handle Chinese
