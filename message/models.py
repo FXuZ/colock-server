@@ -12,7 +12,7 @@ class Message(models.Model):
     send_time = models.DateTimeField(timezone.now)
     # no () means it's called every time instead of only when loading the model
 
-    img = models.FileField(upload_to='./upload/files/')
+    img = models.FileField(upload_to='./send/files/')
 
     class Meta:
         ordering = ('receiver_uid',)

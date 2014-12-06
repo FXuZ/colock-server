@@ -3,7 +3,7 @@ Model Specifications
 
 ## Server Model Hierarchy
 ### `User`
-    - `uid`: internal id to distinguish user
+    - `id`: (managed by SQL self increment, elsewhere called uid) internal id to distinguish user
     - `cid`: [ GeTui ](http://www.igetui.com) client id, uploaded by user on register or retrieving account on other device
     - `ukey`: key on device for authentication, delivered to user on register or retrieving account on other device
     - `region_num`: region code of the user
@@ -22,6 +22,7 @@ Model Specifications
 - `phone_num`
 - `phone_num_hash`
 - `ukey`
+- `uid`
 - list of phone contact hashes
 
 todo:
@@ -37,6 +38,7 @@ todo:
     - `phone_num`: phone number
     - `nickname`
 - response:
+    - `uid` : user's id
     - `ukey`: a random string used as a key
 todo: encryption, sms activation
 
