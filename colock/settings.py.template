@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'south',
     'message',
     'user_manage',
+    'sendfile',
 )
 
 MIDDLEWARE_CLASSES = (
