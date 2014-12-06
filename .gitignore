@@ -54,4 +54,6 @@ docs/_build/
 target/
 
 # privacy
-*settings.py
+colock/settings.py
+*igt_wrappers.py
+
