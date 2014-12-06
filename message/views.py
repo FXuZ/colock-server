@@ -1,16 +1,18 @@
 from django.shortcuts import render, render_to_response
 from django import forms
+# import django.http
 from django.http import HttpResponse
 from django.forms import ModelForm
 from message.models import Message
+from message.models import upload_prefix
 from django.views.decorators.csrf import csrf_exempt
+from sendfile import sendfile
+
 
 from colock.key_generator import *
 from user_manage.authen import user_authen, hash2uid
 from django.utils import timezone
 import json
-## send, upload, download
-
 
 class SendForm(forms.Form):
     receiver_phone_hash = forms.CharField(max_length=32)
@@ -18,6 +20,11 @@ class SendForm(forms.Form):
     sender_ukey = forms.CharField(max_length=32)
     img = forms.FileField()
 
+class DownloadForm(ModelForm):
+    class Meta:
+        fields = ['message_key']
+
+# Create your views here.
 
 # this is not safe!!!
 @csrf_exempt
@@ -50,3 +57,18 @@ def send(request):
     else:
         uf = SendForm()
         return render_to_response('register.html', {'uf':uf})
+
+@csrf_exempt
+def download(request):
+    if request.method == "POST":
+        msg_id = int( request.POST["message_id"] )
+        msg_key = request.POST["message_key"]
+        if Message.objects.get(id=msg_id).message_key == msg_key:
+            filepath = ( "%s/%s" % ( upload_prefix, msg_key ) )
+            img_file = open(filepath)
+            # make a response
+            return sendfile(img_file)
+    else:
+        return HttpResponse(status=405)
+    # print request.POST
+

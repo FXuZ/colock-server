@@ -15,6 +15,8 @@ Model Specifications
     - `receiver_uid`: internal id of receiver
     - `message_key`: hash sum of sender id, receiver id and time stamp, which is also used for uploaded filename
     - `send_time`: send time of the message, actually server time when the request arrives
+    - `exist`: bool, set to false when the receiver has finished downloading and delete the file
+    - `filetype`: string, type of the file
 
 ## Stored on client phone
 - `cid`: received from GeTui server via SDK
@@ -58,6 +60,7 @@ todo: encryption, sms activation
     data = {
       "sender_region": sender.region_num,
       "sender_phone": hash(sender.phone_num),
+      "message_id": message.id,
       "message_key": message.message_key,
       "send_time": message.send_time,
     }

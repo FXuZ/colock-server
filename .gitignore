@@ -59,3 +59,8 @@ colock/settings.py
 
 # pycharm project
 .idea
+# sqlite test db
+db.sqlite3
+# ignore data
+*.png
+*.jpg
