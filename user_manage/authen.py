@@ -3,7 +3,7 @@ from user_manage.models import User
 
 
 def user_authen(uid, ukey):
-    user = User(id=uid)
+    user = User.objects.get(id=uid)
     if user.ukey == ukey:
         return True
     else:
