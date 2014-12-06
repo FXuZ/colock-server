@@ -12,7 +12,7 @@ class Message(models.Model):
     filetype = models.CharField(max_length=10)
     # no () means it's called every time instead of only when loading the model
 
-    img = models.FileField(upload_to='./send/files/')
+    img = models.FileField(upload_to=upload_prefix)
 
     class Meta:
         ordering = ('receiver_uid',)
