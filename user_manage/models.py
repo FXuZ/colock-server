@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class User(models.Model):
 
-    cid = models.IntegerField()
+    cid = models.CharField(max_length=32)
     ukey = models.CharField(max_length=32)
     # authentication key.
 
