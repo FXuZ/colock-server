@@ -37,10 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'colock',
     'south',
-    'rest_framework',
+    'message',
     'user_manage',
     'sendfile',
-    'message',
 )
 
 MIDDLEWARE_CLASSES = (
