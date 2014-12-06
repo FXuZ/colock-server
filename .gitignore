@@ -57,3 +57,5 @@ target/
 colock/settings.py
 *igt_wrappers.py
 
+# pycharm project
+.idea
