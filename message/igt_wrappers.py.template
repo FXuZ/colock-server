@@ -10,12 +10,12 @@ from igetui.igt_target import Target
 import json
 import hashlib
 
-APPKEY = "JqIuzNCh8xA8wXduUKM9E"
-APPID = "7mgfcIRMfD9WYxM9OqFao4"
-MASTERSECRET = "3zML5QG36Z5MfH3iXQX004"
-APPSECRET = "O7iYcIua0tAipzGlMOtW67"
+# add your own appkey, appid, mastersecret and appsecret from getui
+APPKEY = ""
+APPID = ""
+MASTERSECRET = ""
+APPSECRET = ""
 HOST = 'http://sdk.open.api.igexin.com/apiex.htm'
-PRIV_HOST = 'http://rumisato.fxyk.tk/download/'
 
 def pushImageToSingle(sender, receiver, message):
     '''
