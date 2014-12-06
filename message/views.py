@@ -21,8 +21,8 @@ class SendForm(forms.Form):
     img = forms.FileField()
 
 class DownloadForm(ModelForm):
-    class Meta:
-        fields = ['message_key']
+    message_id = forms.IntegerField()
+    message_ukey = forms.CharField(max_length=32)
 
 # Create your views here.
 
@@ -60,10 +60,16 @@ def download(request):
         msg_id = int( request.POST["message_id"] )
         msg_key = request.POST["message_key"]
         if Message.objects.get(id=msg_id).message_key == msg_key:
+            msg = Message.objects.get(id=msg_id)
+            msg.exist = False
+            msg.save()
             filepath = ( "%s/%s" % ( upload_prefix, msg_key ) )
             img_file = open(filepath)
             # make a response
+            # from django-sendfile
             return sendfile(img_file)
+        else:
+            return HttpResponse(status=404,"Message not exist");
     else:
         return HttpResponse(status=405)
     # print request.POST

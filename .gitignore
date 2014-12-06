@@ -61,3 +61,5 @@ colock/settings.py
 .idea
 # sqlite test db
 db.sqlite3
+# south tmp
+*/migrations/*.py
