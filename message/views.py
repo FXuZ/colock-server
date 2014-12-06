@@ -2,7 +2,6 @@ from django.shortcuts import render, render_to_response
 from django import forms
 # import django.http
 from django.http import HttpResponse
-from django.forms import ModelForm
 from message.models import Message
 from message.models import upload_prefix
 from django.views.decorators.csrf import csrf_exempt
@@ -20,9 +19,9 @@ class SendForm(forms.Form):
     sender_ukey = forms.CharField(max_length=32)
     img = forms.FileField()
 
-class DownloadForm(ModelForm):
-    class Meta:
-        fields = ['message_key']
+class DownloadForm(forms.Form):
+    message_id = forms.IntegerField()
+    message_ukey = forms.CharField(max_length=32)
 
 # Create your views here.
 
@@ -63,12 +62,18 @@ def download(request):
     if request.method == "POST":
         msg_id = int( request.POST["message_id"] )
         msg_key = request.POST["message_key"]
-        if Message.objects.get(id=msg_id).message_key == msg_key:
+        msg = Message.objects.get(id=msg_id)
+        if msg.message_key == msg_key:
+            msg.exist = False
+            msg.save()
             filepath = ( "%s/%s" % ( upload_prefix, msg_key ) )
             img_file = open(filepath)
             # make a response
+            # from django-sendfile
             return sendfile(img_file)
+        else:
+            return HttpResponse("Message not exist",status=404);
     else:
-        return HttpResponse(status=405)
+        return render_to_response('register.html', {'uf': DownloadForm()})
     # print request.POST
 
