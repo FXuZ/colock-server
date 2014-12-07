@@ -15,4 +15,8 @@ class User(models.Model):
     # no () means it's called every time instead of only when loading the model
 
 
-
+class Friendship(models.Model):
+    uid1 = models.IntegerField()
+    uid2 = models.IntegerField()
+    intimate = models.BooleanField()
+    # uid1 is defined as the smaller one of the 2 id.
