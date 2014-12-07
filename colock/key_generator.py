@@ -13,3 +13,10 @@ def message_key_gen(sender_uid, receiver_uid, datetime):
     key = str(sender_uid) + str(receiver_uid) + str(datetime)
     key = hashlib.new("md5", key).hexdigest()
     return key
+
+
+def phone_hash_gen(region_num,phone_num):
+    salt = "Christina"
+    key = str(region_num) + salt + str(phone_num)
+    key = hashlib.new("md5", key).hexdigest()
+    return key

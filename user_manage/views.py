@@ -30,6 +30,7 @@ def register(request):
             new_user = reg_form.save(commit=False)
             new_user.reg_time = timezone.now()
             new_user.ukey = user_key_gen(new_user.id, new_user.region_num, new_user.phone_num, new_user.reg_time)
+            new_user.phone_hash = phone_hash_gen(new_user.region_num, new_user.phone_num)
             new_user.save()
 
             return_value = {'uid': new_user.id, 'ukey': new_user.ukey}
@@ -38,4 +39,4 @@ def register(request):
             # success and created new user
     else:
         uf = RegisterForm()
-    return render_to_response('register.html',{'uf':uf})
+    return render_to_response('register.html', {'uf': uf})
