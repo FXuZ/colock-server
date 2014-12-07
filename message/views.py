@@ -11,6 +11,7 @@ from user_manage.authen import user_authen, hash2uid
 from django.utils import timezone
 import json
 
+from igt_wrappers import pushMsgToSingle
 
 class SendForm(forms.Form):
     receiver_uid = forms.IntegerField()
@@ -48,6 +49,11 @@ def send(request):
                 new_message.save()
 
                 return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
+#                 sender = User.objects.get(int(sender_uid))
+#                 receiver = User.objects.get(int(send_form.cleaned_data['receiver_uid']))
+#                 igt_ret = pushMsgToSingle(sender, receiver, new_message)
+#                 if DEBUG == True:
+#                     print igt_ret
                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
                 # success and created new message
             else:
