@@ -66,3 +66,4 @@ db.sqlite3
 # ignore data
 *.png
 *.jpg
+upload
