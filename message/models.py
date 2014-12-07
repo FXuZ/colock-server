@@ -3,6 +3,7 @@ from django.utils import timezone
 
 upload_prefix='upload'
 
+
 class Message(models.Model):
     sender_uid = models.IntegerField()
     receiver_uid = models.IntegerField()

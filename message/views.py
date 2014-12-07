@@ -13,17 +13,21 @@ from user_manage.authen import user_authen, hash2uid
 from django.utils import timezone
 import json
 
+
 class SendForm(forms.Form):
-    receiver_phone_hash = forms.CharField(max_length=32)
+    receiver_uid = forms.IntegerField()
     sender_uid = forms.IntegerField()
     sender_ukey = forms.CharField(max_length=32)
+    filetype = forms.CharField(max_length=10)
     img = forms.FileField()
+
 
 class DownloadForm(forms.Form):
     message_id = forms.IntegerField()
     message_ukey = forms.CharField(max_length=32)
 
 # Create your views here.
+
 
 # this is not safe!!!
 @csrf_exempt
@@ -33,17 +37,16 @@ def send(request):
         if send_form.is_valid():
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
-
             if user_authen(sender_uid, sender_ukey):
 
                 new_message = Message()
                 img = request.FILES['img']
-
                 new_message.sender_uid = sender_uid
-                new_message.receiver_uid = hash2uid(send_form.cleaned_data['receiver_phone_hash'])
+                new_message.receiver_uid = send_form.cleaned_data['receiver_uid']
                 new_message.send_time = timezone.now()
                 new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
                 new_message.img = img
+                new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
 
                 return_value = {'uid': new_message.id, 'ukey': new_message.message_key}
