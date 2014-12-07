@@ -5,8 +5,6 @@ from django.http import HttpResponse
 from message.models import Message
 from message.models import upload_prefix
 from django.views.decorators.csrf import csrf_exempt
-from sendfile import sendfile
-
 
 from colock.key_generator import *
 from user_manage.authen import user_authen, hash2uid
@@ -24,7 +22,7 @@ class SendForm(forms.Form):
 
 class DownloadForm(forms.Form):
     message_id = forms.IntegerField()
-    message_ukey = forms.CharField(max_length=32)
+    message_key = forms.CharField(max_length=32)
 
 # Create your views here.
 
@@ -49,7 +47,7 @@ def send(request):
                 new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
 
-                return_value = {'uid': new_message.id, 'ukey': new_message.message_key}
+                return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
                 # success and created new message
             else:
@@ -72,8 +70,9 @@ def download(request):
             filepath = ( "%s/%s" % ( upload_prefix, msg_key ) )
             img_file = open(filepath)
             # make a response
-            # from django-sendfile
-            return sendfile(img_file)
+            res = HttpResponse( img_file, content_type = 'image/%s' % msg.filetype )
+            res['Content-Disposition'] = 'attachment; filename=%s.%s' % (msg_key, msg.filetype)
+            return res
         else:
             return HttpResponse("Message not exist",status=404);
     else:
