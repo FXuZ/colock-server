@@ -9,6 +9,7 @@ from django.utils import timezone
 from colock.key_generator import *
 import json
 
+
 class RegisterForm(ModelForm):
     class Meta:
         model = User

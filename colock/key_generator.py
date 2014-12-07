@@ -1,12 +1,15 @@
+# -*- coding:utf-8 -*-
 __author__ = 'Chengyu'
-import datetime
+import hashlib
 
 
 def user_key_gen(uid, region_num, phone_num, datetime):
-    key = 'a'
+    key = str(uid) + str(region_num) + str(phone_num) + str(datetime)
+    key = hashlib.new("md5", key).hexdigest()
     return key
 
 
 def message_key_gen(sender_uid, receiver_uid, datetime):
-    key = 'b'
+    key = str(sender_uid) + str(receiver_uid) + str(datetime)
+    key = hashlib.new("md5", key).hexdigest()
     return key
