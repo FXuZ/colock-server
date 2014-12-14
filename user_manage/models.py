@@ -12,6 +12,7 @@ class User(models.Model):
     phone_num = models.BigIntegerField()
     nickname = models.CharField(max_length=32)
     reg_time = models.DateTimeField(default=timezone.now)
+    phone_hash = models.CharField(max_length=32)
     # no () means it's called every time instead of only when loading the model
     def isFriendOf(user):
         return True
