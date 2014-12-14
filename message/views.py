@@ -36,7 +36,9 @@ def send(request):
         if send_form.is_valid():
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
-            if user_authen(sender_uid, sender_ukey):
+            sender = User.objects.get(int(sender_uid))
+            receiver = User.objects.get(int(send_form.cleaned_data['receiver_uid']))
+            if user_authen(sender_uid, sender_ukey) and sender.isFriendOf(receiver):
 
                 new_message = Message()
                 img = request.FILES['img']
@@ -49,8 +51,6 @@ def send(request):
                 new_message.save()
 
                 return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
-#                 sender = User.objects.get(int(sender_uid))
-#                 receiver = User.objects.get(int(send_form.cleaned_data['receiver_uid']))
 #                 igt_ret = pushMsgToSingle(sender, receiver, new_message)
 #                 if DEBUG == True:
 #                     print igt_ret

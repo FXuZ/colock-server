@@ -17,6 +17,10 @@ Model Specifications
     - `send_time`: send time of the message, actually server time when the request arrives
     - `exist`: bool, set to false when the receiver has finished downloading and delete the file
     - `filetype`: string, type of the file
+### `Friendship`
+    - `uid1`
+    - `uid2`: int, should be larger than `uid1`
+    - `intimate`: bool, intimate friend flag. With this flag the message can be saved by the receiver
 
 ## Stored on client phone
 - `cid`: received from GeTui server via SDK
@@ -28,9 +32,9 @@ Model Specifications
 - list of phone contact hashes
 
 todo:
-    - friend management
-    - user group management
-    - friend discovery via phone contacts
+    - [ ] friend management
+    - [ ] user group management
+    - [ ] friend discovery via phone contacts
 
 ## Request and Response
 ### Register
@@ -42,7 +46,9 @@ todo:
 - response:
     - `uid` : user's id
     - `ukey`: a random string used as a key
-todo: encryption, sms activation
+todo:
+    - [ ] encryption
+    - [ ] sms activation
 
 ### Send image
 - request:
@@ -58,6 +64,7 @@ todo: encryption, sms activation
     push message data to GeTui server, data structure is a json
     ```python
     data = {
+      "type": "message",
       "sender_region": sender.region_num,
       "sender_phone": hash(sender.phone_num),
       "message_id": message.id,
@@ -73,3 +80,10 @@ todo: encryption, sms activation
     - `receiver_phone`: hash of receiver phone number
 - response:
     - `img_file`: image file binary data
+
+### Add friend
+- request:
+
+### Find friend
+
+### Accept/Decline friend request

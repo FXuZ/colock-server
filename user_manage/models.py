@@ -13,6 +13,8 @@ class User(models.Model):
     nickname = models.CharField(max_length=32)
     reg_time = models.DateTimeField(default=timezone.now)
     # no () means it's called every time instead of only when loading the model
+    def isFriendOf(user):
+        return True
 
 
 class Friendship(models.Model):
