@@ -1,6 +1,9 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
+import user_manage.views
+import message.views
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -9,4 +12,8 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^register/', user_manage.views.register),
+    url(r'^send/', message.views.send),
+    url(r'^download/', message.views.download),
 )
+
