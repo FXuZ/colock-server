@@ -17,7 +17,7 @@ MASTERSECRET = ""
 APPSECRET = ""
 HOST = 'http://sdk.open.api.igexin.com/apiex.htm'
 
-def pushImageToSingle(sender, receiver, message):
+def pushMsgToSingle(sender, receiver, message):
     '''
     push message uploaded from sender to receiver
     sender and receiver are User objects,
