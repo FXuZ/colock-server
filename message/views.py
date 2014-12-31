@@ -80,7 +80,7 @@ def download(request):
             res['Content-Disposition'] = 'attachment; filename=%s.%s' % (msg_key, msg.filetype)
             return res
         else:
-            return HttpResponse("Message not exist",status=404);
+            return HttpResponse("Message not exist", status=404);
     else:
         return render_to_response('register.html', {'uf': DownloadForm()})
     # print request.POST

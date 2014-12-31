@@ -1,6 +1,13 @@
 Model Specifications
 ========
 
+## todo:
+    - [ ] friend management
+    - [ ] user group management
+    - [ ] friend matching via phone contacts
+    - [ ] search for friend by nickname
+    - [ ] add friend by uid
+
 ## Server Model Hierarchy
 ### `User`
     - `id`: (managed by SQL self increment, elsewhere called uid) internal id to distinguish user
@@ -40,11 +47,6 @@ Model Specifications
 - `uid`
 - list of phone contact hashes
 
-todo:
-    - [ ] friend management
-    - [ ] user group management
-    - [ ] friend discovery via phone contacts
-
 ## Request and Response
 ### Register
 - request:
@@ -60,7 +62,7 @@ todo:
     - [ ] sms activation
 
 ### Send image
-- request:
+- request: /send/
     - `phone_hash`: hash of the user phone_num
     - `ukey`: combined with phone_hash to authenticate user
     - `receiver_uid`: uid of the receiver
@@ -84,9 +86,9 @@ todo:
     and this should be what the client should receive.
 
 ### Get image
-- request:
-    - `sender_phone`: hash of sender phone number
-    - `receiver_phone`: hash of receiver phone number
+- request: /download/
+    - `message_id`: message id received from getui push message
+    - `message_key`: message key
 - response:
     - `img_file`: image file binary data
 
