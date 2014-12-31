@@ -18,9 +18,18 @@ Model Specifications
     - `exist`: bool, set to false when the receiver has finished downloading and delete the file
     - `filetype`: string, type of the file
 ### `Friendship`
-    - `uid1`
-    - `uid2`: int, should be larger than `uid1`
-    - `intimate`: bool, intimate friend flag. With this flag the message can be saved by the receiver
+    - `src`: int, uid of the source of the relationship
+    - `dest`: int, uid of target
+    - `reg_time`: time of record established
+    - `flags`: int, flags that indicates the relationships, including intimate, mutual have contact, do not disturb, black list
+    Also, define the constants
+        ```python
+        INTIMATE = 0b0000000000000001 # intimate friend, they can save messages from each other, must be mutual
+        INTIMATE_PENDING = 0b0000000000000010 # src has sent intimate friend request to dest
+        MUTUAL_CONTACT = 0b0000000000001000 # each have the contact info (phone number) of the other, matched on the server on upload of user contacts
+        DND = 0b0000000000010000 # src has set dest as do not disturb
+        BLOCK = 0b0000000000100000 # src has blocked dest
+        ```
 
 ## Stored on client phone
 - `cid`: received from GeTui server via SDK
