@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from colock.key_generator import *
 from user_manage.authen import user_authen, hash2uid
+from user_manage.models import User
 from django.utils import timezone
 import json
 
@@ -80,7 +81,7 @@ def download(request):
             res['Content-Disposition'] = 'attachment; filename=%s.%s' % (msg_key, msg.filetype)
             return res
         else:
-            return HttpResponse("Message not exist",status=404);
+            return HttpResponse("Message not exist",status=404)
     else:
         return render_to_response('register.html', {'uf': DownloadForm()})
     # print request.POST

@@ -10,6 +10,3 @@ def user_authen(uid, ukey):
         return False
 
 
-def hash2uid(hash):
-    uid = 1
-    return uid

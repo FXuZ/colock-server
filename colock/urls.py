@@ -16,4 +16,3 @@ urlpatterns = patterns('',
     url(r'^send/', message.views.send),
     url(r'^download/', message.views.download),
 )
-

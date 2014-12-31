@@ -14,12 +14,12 @@ class User(models.Model):
     reg_time = models.DateTimeField(default=timezone.now)
     phone_hash = models.CharField(max_length=32)
     # no () means it's called every time instead of only when loading the model
-    def isFriendOf(user):
-        return True
 
 
 class Friendship(models.Model):
-    uid1 = models.IntegerField()
-    uid2 = models.IntegerField()
-    intimate = models.BooleanField()
-    # uid1 is defined as the smaller one of the 2 id.
+    # directed
+    src_uid = models.IntegerField()
+    dest_uid = models.IntegerField()
+    friendship_type = models.IntegerField()
+    # type0: src blocked dest, type1: friend, type2: src view dest as intimate
+
