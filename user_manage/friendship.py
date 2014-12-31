@@ -1,16 +1,10 @@
 __author__ = 'Chengyu'
 from user_manage.models import User
 from user_manage.models import Friendship
-
+from colock.Error import *
 
 def get_friend_list(src_uid):
-    return "bidiu!"
-
-
-def is_friend():
-    # blacklist is not friend!
-
-    return True
+    return Friendship.objects.filter(src_uid=src_uid)
 
 
 # adding friend needs to search first for the uid and information
@@ -31,13 +25,19 @@ def nickname2uid(input_nickname):
 
 def add_friend(src_uid, dest_uid):
 
-    # first check no friendship or blacklist existed between them
-    pass
+    friendship1 = Friendship.objects.filter(dest_uid,src_uid)
+    if len(friendship1) != 0:
+        if friendship1[0].friendship_type == 0:
+            raise BlockedfriendError
 
-    # if one side is blocked
-
-
-
+    friendship = Friendship.objects.filter(src_uid, dest_uid)
+    if len(friendship) == 0:
+        Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=1).save()
+    else:
+        if friendship[0].friendship_type == 0:
+            raise BlockfriendError
+        if friendship[0].friendship_type != 1:
+            raise FriendExistError
 
 
 def block_friend(src_uid, dest_uid):
