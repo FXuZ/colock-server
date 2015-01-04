@@ -10,7 +10,7 @@ from colock.key_generator import user_key_gen, message_key_gen, phone_hash_gen
 from user_manage.authen import user_authen
 from user_manage.models import User
 from django.utils import timezone
-import json
+import json, os
 from user_manage.friendship import is_friend_of
 from colock.security import injection_filter
 
@@ -49,6 +49,7 @@ def send(request):
                 new_message.send_time = timezone.now()
                 new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
                 new_message.img = request.FILES['img']
+                fn, new_message.filetype = os.path.splitext(new_message.img.name)
                 # new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
 
@@ -76,7 +77,7 @@ def download(request):
             msg.exist = False
             msg.save()
             msg_key = injection_filter(msg_key)
-            filepath = ( "%s/%s" % ( upload_prefix, msg_key ) )
+            filepath = ( "%s/%s%s" % ( upload_prefix, msg_key, msg.filetype ) )
             img_file = open(filepath)
             # make a response
             res = HttpResponse( img_file, content_type = 'image/%s' % msg.filetype )

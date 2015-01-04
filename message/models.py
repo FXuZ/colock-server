@@ -20,7 +20,7 @@ class Message(models.Model):
     send_time = models.DateTimeField(default=timezone.now)
     # no () means it's called every time instead of only when loading the model
     exist = models.BooleanField(default=True)
-    filetype = models.CharField(max_length=10, default="png")
+    filetype = models.CharField(max_length=10, default=".png")
 
     img = models.ImageField(upload_to=new_filename)
 
