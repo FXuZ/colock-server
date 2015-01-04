@@ -19,7 +19,7 @@ class SendForm(forms.Form):
     receiver_uid = forms.IntegerField()
     sender_uid = forms.IntegerField()
     sender_ukey = forms.CharField(max_length=32)
-    filetype = forms.CharField(max_length=10)
+    # filetype = forms.CharField(max_length=10)
     img = forms.ImageField()
 
 
@@ -49,7 +49,7 @@ def send(request):
                 new_message.send_time = timezone.now()
                 new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
                 new_message.img = img
-                new_message.filetype = send_form.cleaned_data['filetype']
+                # new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
 
                 return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
