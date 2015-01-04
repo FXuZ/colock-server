@@ -7,7 +7,7 @@ from message.models import upload_prefix
 from django.views.decorators.csrf import csrf_exempt
 
 from colock.key_generator import *
-from user_manage.authen import user_authen, hash2uid
+from user_manage.authen import user_authen
 from user_manage.models import User
 from django.utils import timezone
 import json

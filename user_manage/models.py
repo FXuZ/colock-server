@@ -15,6 +15,9 @@ class User(models.Model):
     phone_hash = models.CharField(max_length=32)
     # no () means it's called every time instead of only when loading the model
 
+    def __unicode__(self):
+        return unicode(self.id)
+
 
 class Friendship(models.Model):
     # directed
