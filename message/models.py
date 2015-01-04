@@ -12,6 +12,7 @@ class Message(models.Model):
         fn, ext = os.path.splitext(filename)
         newfn = message_key_gen(self.sender_uid,
                 self.receiver_uid, str( self.send_time ) )
+        self.filetype = ext
         return "%s/%s.%s" % ( upload_prefix, newfn, ext )
 
     sender_uid = models.IntegerField()
@@ -19,7 +20,7 @@ class Message(models.Model):
     message_key = models.CharField(max_length=32)
     send_time = models.DateTimeField(default=timezone.now)
     exist = models.BooleanField(default=True)
-    filetype = models.CharField(max_length=10)
+    # filetype = models.CharField(max_length=10)
     # no () means it's called every time instead of only when loading the model
 
     img = models.ImageField(upload_to=new_filename)
