@@ -3,6 +3,7 @@ from user_manage.models import User
 from user_manage.models import Friendship
 from colock.Error import *
 
+
 def get_friend_list(src_uid):
     return Friendship.objects.filter(src_uid=src_uid)
 
@@ -21,6 +22,18 @@ def nickname2uid(input_nickname):
     # returns query list
     user = User.objects.filter(nickname=input_nickname)
     return user
+
+
+def is_friend_of(src_uid, dest_uid):
+    # return true if src can send a message to dest
+    friendship = Friendship.objects.filter(dest_uid, src_uid)
+    if len(friendship) == 0:
+        return False
+    else:
+        if friendship[0].friendship_type == 0:
+            return False
+        else:
+            return True
 
 
 def add_friend(src_uid, dest_uid):

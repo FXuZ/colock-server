@@ -11,6 +11,7 @@ from user_manage.authen import user_authen
 from user_manage.models import User
 from django.utils import timezone
 import json
+from user_manage.friendship import is_friend_of
 
 from igt_wrappers import pushMsgToSingle
 
@@ -39,7 +40,7 @@ def send(request):
             sender_ukey = send_form.cleaned_data['sender_ukey']
             sender = User.objects.get(int(sender_uid))
             receiver = User.objects.get(int(send_form.cleaned_data['receiver_uid']))
-            if user_authen(sender_uid, sender_ukey) and sender.isFriendOf(receiver):
+            if user_authen(sender_uid, sender_ukey) and is_friend_of(sender.id, receiver.id):
 
                 new_message = Message()
                 img = request.FILES['img']
