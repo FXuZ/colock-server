@@ -20,7 +20,7 @@ class SendForm(forms.Form):
     sender_uid = forms.IntegerField()
     sender_ukey = forms.CharField(max_length=32)
     filetype = forms.CharField(max_length=10)
-    img = forms.FileField()
+    img = forms.ImageField()
 
 
 class DownloadForm(forms.Form):
@@ -38,7 +38,7 @@ def send(request):
         if send_form.is_valid():
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
-            sender = User.objects.get(int(sender_uid))
+            sender = User.objects.get(id=int(sender_uid))
             receiver = User.objects.get(int(send_form.cleaned_data['receiver_uid']))
             if user_authen(sender_uid, sender_ukey) and is_friend_of(sender.id, receiver.id):
 
