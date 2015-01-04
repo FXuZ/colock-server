@@ -39,7 +39,7 @@ def send(request):
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
             sender = User.objects.get(id=int(sender_uid))
-            receiver = User.objects.get(int(send_form.cleaned_data['receiver_uid']))
+            receiver = User.objects.get(id=int(send_form.cleaned_data['receiver_uid']))
             if user_authen(sender_uid, sender_ukey) and is_friend_of(sender.id, receiver.id):
 
                 new_message = Message()
