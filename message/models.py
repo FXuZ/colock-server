@@ -13,7 +13,7 @@ class Message(models.Model):
         newfn = message_key_gen(self.sender_uid,
                 self.receiver_uid, str( self.send_time ) )
         self.filetype = ext
-        return "%s/%s.%s" % ( upload_prefix, newfn, ext )
+        return os.path.join( upload_prefix, "%s.%s" % (newfn, ext) )
 
     sender_uid = models.IntegerField()
     receiver_uid = models.IntegerField()
