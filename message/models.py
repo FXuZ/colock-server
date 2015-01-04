@@ -11,7 +11,7 @@ class Message(models.Model):
     def new_filename(self, filename):
         fn, ext = os.path.splitext(filename)
         newfn = message_key_gen(self.sender_uid,
-                self.receiver_uid, str( timezone.now() ) )
+                self.receiver_uid, str( self.send_time ) )
         return "%s/%s.%s" % ( upload_prefix, newfn, ext )
 
     sender_uid = models.IntegerField()
