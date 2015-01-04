@@ -44,12 +44,11 @@ def send(request):
             if user_authen(sender_uid, sender_ukey) and is_friend_of(sender.id, receiver.id):
 
                 new_message = Message()
-                img = request.FILES['img']
                 new_message.sender_uid = sender_uid
                 new_message.receiver_uid = send_form.cleaned_data['receiver_uid']
                 new_message.send_time = timezone.now()
                 new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
-                new_message.img = img
+                new_message.img = request.FILES['img']
                 # new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
 

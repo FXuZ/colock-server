@@ -7,21 +7,20 @@ upload_prefix='upload'
 
 
 class Message(models.Model):
-    @staticmethod
-    def new_filename(self, filename):
+    def new_filename(instance, filename):
         fn, ext = os.path.splitext(filename)
-        newfn = message_key_gen(self.sender_uid,
-                self.receiver_uid, str( self.send_time ) )
-        self.filetype = ext
-        return os.path.join( upload_prefix, "%s.%s" % (newfn, ext) )
+        newfn = message_key_gen( instance.sender_uid,
+                instance.receiver_uid, str( instance.send_time ) )
+        instance.filetype = ext
+        return os.path.join( upload_prefix, "%s%s" % (newfn, ext) )
 
     sender_uid = models.IntegerField()
     receiver_uid = models.IntegerField()
     message_key = models.CharField(max_length=32)
     send_time = models.DateTimeField(default=timezone.now)
+    # no () means it's called every time instead of only when loading the model
     exist = models.BooleanField(default=True)
     filetype = models.CharField(max_length=10, default="png")
-    # no () means it's called every time instead of only when loading the model
 
     img = models.ImageField(upload_to=new_filename)
 

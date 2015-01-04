@@ -21,8 +21,8 @@ class User(models.Model):
 
 class Friendship(models.Model):
     # directed
-    src_uid = models.IntegerField()
-    dest_uid = models.IntegerField()
-    friendship_type = models.IntegerField()
+    src_uid = models.IntegerField(default=0)
+    dest_uid = models.IntegerField(default=0)
+    friendship_type = models.IntegerField(default=1)
     # type0: src blocked dest, type1: src has phone num of dest, type2: src view dest as intimate
 
