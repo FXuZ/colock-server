@@ -7,11 +7,12 @@ from message.models import upload_prefix
 from django.views.decorators.csrf import csrf_exempt
 
 from colock.key_generator import user_key_gen, message_key_gen, phone_hash_gen
-from user_manage.authen import user_authen, hash2uid
+from user_manage.authen import user_authen
 from user_manage.models import User
 from django.utils import timezone
 import json
 from user_manage.friendship import is_friend_of
+from colock.security import injection_filter
 
 from igt_wrappers import pushMsgToSingle
 
@@ -59,7 +60,7 @@ def send(request):
                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
                 # success and created new message
             else:
-                return HttpResponse('Authen error')
+                return HttpResponse('Authen error or not friend with receiver')
         else:
             return render_to_response('register.html', {'uf': send_form, 'form': send_form})
     else:
@@ -75,6 +76,7 @@ def download(request):
         if msg.message_key == msg_key:
             msg.exist = False
             msg.save()
+            msg_key = injection_filter(msg_key)
             filepath = ( "%s/%s" % ( upload_prefix, msg_key ) )
             img_file = open(filepath)
             # make a response

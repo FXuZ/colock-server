@@ -26,7 +26,7 @@ def nickname2uid(input_nickname):
 
 def is_friend_of(src_uid, dest_uid):
     # return true if src can send a message to dest
-    friendship = Friendship.objects.filter(dest_uid, src_uid)
+    friendship = Friendship.objects.filter(src_uid=dest_uid, dest_uid=src_uid)
     if len(friendship) == 0:
         return False
     else:
@@ -38,12 +38,12 @@ def is_friend_of(src_uid, dest_uid):
 
 def add_friend(src_uid, dest_uid):
 
-    friendship1 = Friendship.objects.filter(dest_uid,src_uid)
+    friendship1 = Friendship.objects.filter(src_uid=dest_uid, dest_uid=src_uid)
     if len(friendship1) != 0:
         if friendship1[0].friendship_type == 0:
             raise BlockedfriendError
 
-    friendship = Friendship.objects.filter(src_uid, dest_uid)
+    friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
     if len(friendship) == 0:
         Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=1).save()
     else:
