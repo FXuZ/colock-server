@@ -25,7 +25,7 @@ def nickname2uid(input_nickname):
 
 
 def is_friend_of(src_uid, dest_uid):
-    # return true if src can send a message to dest
+    # return true if src can send a message to dest, also self is considered as friend
     if src_uid == dest_uid:
         return True
     friendship = Friendship.objects.filter(src_uid=dest_uid, dest_uid=src_uid)
