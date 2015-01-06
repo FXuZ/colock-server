@@ -27,3 +27,8 @@ class Message(models.Model):
     class Meta:
         ordering = ('receiver_uid',)
 
+
+class RouterMessage(models.Model):
+    sender_uid = models.IntegerField()
+    send_time = models.DateTimeField(default=timezone.now)
+    exist = models.BooleanField(default=True)
