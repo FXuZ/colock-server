@@ -13,8 +13,12 @@ from django.utils import timezone
 import json, os
 from user_manage.friendship import is_friend_of
 from colock.security import injection_filter
+from django.core.exceptions import ObjectDoesNotExist
+
+from colock.utils import call_hook
 
 from igt_wrappers import pushMsgToSingle
+
 
 class SendForm(forms.Form):
     receiver_uid = forms.IntegerField()
@@ -28,6 +32,12 @@ class DownloadForm(forms.Form):
     message_id = forms.IntegerField()
     message_key = forms.CharField(max_length=32)
 
+
+class RouterForm(forms.Form):
+    sender_uid = forms.IntegerField()
+    sender_ukey = forms.CharField(max_length=32)
+
+
 # Create your views here.
 
 
@@ -39,8 +49,11 @@ def send(request):
         if send_form.is_valid():
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
-            sender = User.objects.get(id=int(sender_uid))
-            receiver = User.objects.get(id=int(send_form.cleaned_data['receiver_uid']))
+            try:
+                sender = User.objects.get(id=int(sender_uid))
+                receiver = User.objects.get(id=int(send_form.cleaned_data['receiver_uid']))
+            except ObjectDoesNotExist:
+                return HttpResponse('no such receiver id', status=404)
             if user_authen(sender_uid, sender_ukey) and is_friend_of(sender.id, receiver.id):
 
                 new_message = Message()
@@ -89,4 +102,52 @@ def download(request):
     else:
         return render_to_response('register.html', {'uf': DownloadForm()})
     # print request.POST
+
+
+# def router(request):
+#     if request.method == "POST":
+#         form = RouterForm(request.POST, request.FILES)
+#         # it may need files
+#         if form.is_valid():
+#             sender_uid = form.cleaned_data['sender_uid']
+#             sender_ukey = form.cleaned_data['sender_ukey']
+#             try:
+#                 sender = User.objects.get(id=int(sender_uid))
+#             except ObjectDoesNotExist:
+#                 return HttpResponse('no such receiver id', status=404)
+#             if user_authen(sender_uid, sender_ukey):
+#
+#                 if
+#
+#
+#
+#
+#                 new_message = Message()
+#                 new_message.sender_uid = sender_uid
+#                 new_message.receiver_uid = form.cleaned_data['receiver_uid']
+#                 new_message.send_time = timezone.now()
+#                 new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
+#                 new_message.img = request.FILES['img']
+#                 fn, new_message.filetype = os.path.splitext(new_message.img.name)
+#                 # new_message.filetype = send_form.cleaned_data['filetype']
+#                 new_message.save()
+#
+#                 return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
+# #                 igt_ret = pushMsgToSingle(sender, receiver, new_message)
+# #                 if DEBUG == True:
+# #                     print igt_ret
+#                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
+#                 # success and created new message
+#             else:
+#                 return HttpResponse('Authen error or not friend with receiver')
+#         else:
+#             return render_to_response('register.html', {'uf': form, 'form': form})
+#     else:
+#         uf = RouterForm()
+#         return render_to_response('register.html', {'uf':uf})
+
+
+def is_valid_rtm(request):
+    pass
+
 
