@@ -2,10 +2,11 @@
 # -*- encoding:utf-8 -*-
 
 from django.shortcuts import render_to_response
+from django.http import HttpResponse
 from django import forms
 import colock.settings
 from importlib import import_module
-from colock import utils
+from colock import utils, validation
 from django.views.decorators.csrf import csrf_exempt
 
 imported_modules = []
@@ -21,7 +22,13 @@ for mod in colock.settings.DISPATCH_MANAGED_APPS:
 def dispatch(request):
     if request.method == "POST":
         action = request.POST["Action"]
-        return utils.call_hook(action, request.POST["Meta"], request.POST["Data"])
+        meta = request.POST["Meta"]
+        data = request.POST["Data"]
+        is_valid, error_msg = validation.is_valid_dispatch(action, meta, data)
+        if is_valid:
+            return utils.call_hook(action, meta, data)
+        else:
+            return HttpResponse(error_msg, status=500)
     else:
         return render_to_response('register.html',
                     {'uf': dispatchForm()})
