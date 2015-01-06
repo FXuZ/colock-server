@@ -1,5 +1,6 @@
 __author__ = 'Chengyu'
 from user_manage.models import User
+import json
 
 
 def user_authen(uid, ukey):

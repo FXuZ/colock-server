@@ -99,26 +99,7 @@ def download(request):
     # print request.POST
 
 
-import json
 
-
-def is_valid_dispatch(action, meta, data):
-    # return (boolean, string), string is the error information, and if it's valid string will be blank
-    try:
-        dict_meta = json.loads(meta)
-        dict_data = json.loads(data)
-    except:
-        return False, 'meta or data cannot be parsed as json'
-    try:
-        sender_uid = dict_meta['sender_uid']
-        sender_ukey = dict_meta['sender_uid']
-        app_version = dict_meta['app_version']
-    except:
-        return False, 'essential information missing in meta'
-
-    # validate app_version and action
-
-    # validate arguments needed for the action
 
 
 

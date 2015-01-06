@@ -6,8 +6,8 @@ Router Specifications
 Router is used for handling all incoming communication received by the server. But excluding:
     - receive and send messages
     - register
-    
-    
+
+
 ## Incoming Message Format
 - `Action`: unicode
 - `Meta`: unicode, can be parsed as a json
@@ -25,7 +25,7 @@ Router is used for handling all incoming communication received by the server. B
     2. `srch_nickname`
     3. `block`
     4. ``
-    
+
 2. Test Reporting
 
 
