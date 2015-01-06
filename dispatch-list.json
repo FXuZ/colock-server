@@ -1,0 +1,25 @@
+{
+  "v0.0.1":{
+    "add_friend":{
+      "dest_uid":["is_valid_uid" ]
+    },
+    "delete_friend":{
+      "dest_uid":["is_valid_uid" ]
+    },
+    "block_friend":{
+      "dest_uid":["is_valid_uid" ]
+    },
+    "unblock_friend":{
+      "dest_uid":["is_valid_uid" ]
+    },
+    "get_friend_list":{
+    },
+    "srch_phone":{
+      "reg_num":[],
+      "phone_num":[]
+    },
+    "srch_nickname":{
+      "nickname":[]
+    }
+  }
+}
