@@ -6,8 +6,8 @@ Router Specifications
 Router is used for handling all incoming communication received by the server. But excluding:
     - receive and send messages
     - register
-    
-    
+
+
 ## Incoming Message Format
 - `App Version`: unicode
 - `Action`: unicode
@@ -25,7 +25,7 @@ Router is used for handling all incoming communication received by the server. B
     2. `Friend.srch_nickname`
     3. `Friend.block`
     4. `Friend.`
-    
+
 2. Test Reporting
 
 
