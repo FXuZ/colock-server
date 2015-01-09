@@ -4,6 +4,7 @@ from django.contrib import admin
 import user_manage.views
 import message.views
 import colock.utils
+import colock.dispatch
 
 admin.autodiscover()
 
@@ -16,5 +17,5 @@ urlpatterns = patterns('',
     url(r'^register/', user_manage.views.register),
     url(r'^send/', message.views.send),
     url(r'^download/', message.views.download),
-    url(r'^dispatch/', colock.utils.dispatch),
+    url(r'^dispatch/', colock.dispatch.dispatch),
 )

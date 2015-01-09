@@ -27,9 +27,10 @@ def hook(*names):
 def call_hook(name, *args):
     return hooks[name]["func"](*args)
 
-@hook("")
-def testdeco(world):
-    print "hello! %s" % world
+@hook("test")
+def testdeco(meta, data):
+    print meta
+    print data
 
 if __name__ == "__main__":
     print hooks
