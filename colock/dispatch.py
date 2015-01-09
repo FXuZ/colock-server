@@ -7,6 +7,8 @@ from django import forms
 import json
 import colock.settings
 from importlib import import_module
+from colock.utils import call_hook
+
 
 def dispatch(request):
     if request.method == "POST":
