@@ -18,6 +18,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from colock.utils import call_hook
 
 from igt_wrappers import pushMsgToSingle
+#Add to a form containing a FileField and change the field names accordingly.
+from django.template.defaultfilters import filesizeformat
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+# from django.forms import forms
+from django import forms
 
 
 class SendForm(forms.Form):
@@ -26,6 +32,16 @@ class SendForm(forms.Form):
     sender_ukey = forms.CharField(max_length=32)
     # filetype = forms.CharField(max_length=10)
     img = forms.ImageField()
+
+    def clean_content(self):
+        content = self.cleaned_data['content']
+        content_type = content.content_type.split('/')[0]
+        if content_type in settings.CONTENT_TYPES:
+            if content._size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(content._size)))
+        else:
+            raise forms.ValidationError(_('File type is not supported'))
+        return content
 
 
 class DownloadForm(forms.Form):
@@ -42,6 +58,11 @@ def send(request):
     if request.method == "POST":
         send_form = SendForm(request.POST, request.FILES)
         if send_form.is_valid():
+            try:
+                send_form.clean_content()
+            except forms.ValidationError as err:
+                return HttpResponse(err.__unicode__(), status=501)
+
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
             try:
