@@ -100,3 +100,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_ROOT = 'upload/'
+
+# south
+SOUTH_LOGGING_ON=True
+SOUTH_LOGGING_FILE="/tmp/south.log"
+# sendfile config
+SENDFILE_BACKEND="sendfile.backends.simple"
+
+# dispatch config
+DISPATCH_CONFIG_FILE="dispatch-list.json"
+DISPATCH_MANAGED_APPS=[
+    'message',
+    'user_manage',
+]
