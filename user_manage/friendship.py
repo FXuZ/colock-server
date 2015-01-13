@@ -5,7 +5,7 @@ from colock.Error import *
 from colock import utils
 
 
-
+@utils.hook()
 def get_friend_list(meta, data):
     src_uid = meta['uid']
     query = Friendship.objects.filter(src_uid=src_uid)
@@ -17,6 +17,7 @@ def get_friend_list(meta, data):
 # then use the information to add friend
 
 
+@utils.hook()
 def hash2uid(input_hash_lst):
     # returns query list
 
@@ -28,6 +29,7 @@ def hash2uid(input_hash_lst):
     ########################
 
 
+@utils.hook()
 def nickname2uid(meta, data):
     # returns query list
     input_nickname = data['nickname']
@@ -38,6 +40,7 @@ def nickname2uid(meta, data):
 
 
 def is_friend_of(meta, data):
+    # only for server internal use
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
     # return true if src can send a message to dest, also self is considered as friend
@@ -47,12 +50,13 @@ def is_friend_of(meta, data):
     if len(friendship) == 0:
         return False
     else:
-        if friendship[0].friendship_type == 0:
+        if friendship[0].friendship_type <= 0:
             return False
         else:
             return True
 
 
+@utils.hook()
 def add_friend(meta, data):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
@@ -64,6 +68,8 @@ def add_friend(meta, data):
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
     if len(friendship) == 0:
         Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=1).save()
+        dest = User.objects.get(id=dest_uid)
+        return '', {'status': 'done'}, {'reg_num': dest.reg_num, 'phone_num': dest.phone_num}
     else:
         if friendship[0].friendship_type == 0:
             raise BlockfriendError
@@ -71,6 +77,7 @@ def add_friend(meta, data):
             raise FriendExistError
 
 
+@utils.hook()
 def del_friend(meta, data):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
@@ -80,8 +87,10 @@ def del_friend(meta, data):
     if friendship[0].friendship_type == 0:
         raise NoNeedError
     friendship[0].friendship_type = -1
+    return '', {'status': 'done'}, {}
 
 
+@utils.hook()
 def block_friend(meta, data):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
@@ -91,8 +100,9 @@ def block_friend(meta, data):
         tmp_friend.save()
     else:
         friendship[0].friendship_type = 0
+    return '', {'status': 'done'}, {}
 
-
+@utils.hook()
 def unblock_friend(meta, data):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
@@ -102,5 +112,6 @@ def unblock_friend(meta, data):
     if friendship[0].friendship_type != 0:
         raise NoNeedError
     friendship[0].friendship_type = 1
-
+    # Action, Meta, Data
+    return '', {'status': 'done'}, {}
 

@@ -48,16 +48,18 @@ def is_valid_dispatch(action, meta, data):
     except:
         raise InvalidJsonError
     try:
-        sender_uid = dict_meta['sender_uid']
-        sender_ukey = dict_meta['sender_uid']
+        sender_uid = dict_meta['uid']
+        sender_ukey = dict_meta['ukey']
         app_version = dict_meta['app_version']
     except:
         raise InvalidMetaError
 
-    tmp_err = is_valid_user(sender_uid, sender_ukey)
-    if not tmp_err[0]:
-        return tmp_err
-    disp_lst = json.load(BASE_DIR + 'dispatch-list.json')
+    try:
+        tmp = is_valid_user(sender_uid, sender_ukey)
+    except AuthenError:
+        raise AuthenError
+    with open(BASE_DIR + '/dispatch-list.json') as f:
+        disp_lst = json.load(f)
 
     # validate app_version and action
     if app_version not in disp_lst:
@@ -78,7 +80,7 @@ def is_valid_dispatch(action, meta, data):
             except (VersionError, InvalidError) as err:
                 raise err
     else:
-        return True
+        return action, dict_meta, dict_data
 
 #Add to a form containing a FileField and change the field names accordingly.
 from django.template.defaultfilters import filesizeformat

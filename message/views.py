@@ -33,15 +33,12 @@ class SendForm(forms.Form):
     # filetype = forms.CharField(max_length=10)
     img = forms.ImageField()
 
-    def clean_content(self):
-        content = self.cleaned_data['content']
-        content_type = content.content_type.split('/')[0]
-        if content_type in settings.CONTENT_TYPES:
-            if content._size > settings.MAX_UPLOAD_SIZE:
-                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(content._size)))
-        else:
-            raise forms.ValidationError(_('File type is not supported'))
-        return content
+    def clean_img(self):
+        img = self.cleaned_data['img']
+        content_type = img.content_type.split('/')[0]
+        if img._size > settings.MAX_UPLOAD_SIZE:
+            raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(img._size)))
+        return img
 
 
 class DownloadForm(forms.Form):
@@ -58,11 +55,6 @@ def send(request):
     if request.method == "POST":
         send_form = SendForm(request.POST, request.FILES)
         if send_form.is_valid():
-            try:
-                send_form.clean_content()
-            except forms.ValidationError as err:
-                return HttpResponse(err.__unicode__(), status=501)
-
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
             try:
@@ -70,7 +62,7 @@ def send(request):
                 receiver = User.objects.get(id=int(send_form.cleaned_data['receiver_uid']))
             except ObjectDoesNotExist:
                 return HttpResponse('no such receiver id', status=404)
-            if user_authen(sender_uid, sender_ukey) and is_friend_of(sender.id, receiver.id):
+            if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
 
                 new_message = Message()
                 new_message.sender_uid = sender_uid

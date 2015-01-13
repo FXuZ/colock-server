@@ -11,8 +11,11 @@ from colock.utils import call_hook
 from colock import utils, validation
 from django.views.decorators.csrf import csrf_exempt
 import json
+import colock.Error as Error
 
 imported_modules = []
+
+
 class dispatchForm(forms.Form):
     Action = forms.CharField(max_length=32)
     Meta = forms.CharField()
@@ -28,8 +31,8 @@ def dispatch(request):
         action = request.POST["Action"]
         meta = request.POST["Meta"]
         data = request.POST["Data"]
-        is_valid, error_msg = validation.is_valid_dispatch(action, meta, data)
-        if is_valid:
+        try:
+            action, meta, data = validation.is_valid_dispatch(action, meta, data)
             response_action, response_meta, response_data = utils.call_hook(action, meta, data)
             response = HttpResponse()
             response_dict = {"Action": response_action,
@@ -37,8 +40,8 @@ def dispatch(request):
                              "Data": response_data}
             response.write(json.dumps(response_dict))
             return response
-        else:
-            return HttpResponse(error_msg, status=500)
+        except Error.CustomError as err:
+            return HttpResponse(err.__unicode__(), status=500)
     else:
         return render_to_response('register.html',
                     {'uf': dispatchForm()})
