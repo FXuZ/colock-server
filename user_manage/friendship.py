@@ -78,7 +78,7 @@ def add_friend(meta, data):
     if len(friendship) == 0:
         Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=1).save()
         dest = User.objects.get(id=dest_uid)
-        return '', {'status': 'done'}, {'reg_num': dest.reg_num, 'phone_num': dest.phone_num}
+        return '', {'status': 'done'}, {'reg_num': dest.region_num, 'phone_num': dest.phone_num}
     else:
         if friendship[0].friendship_type == 0:
             raise BlockfriendError
