@@ -13,10 +13,12 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import colock.Error as Error
 
+
+from user_manage import friendship
 imported_modules = []
 
 
-class dispatchForm(forms.Form):
+class DispatchForm(forms.Form):
     Action = forms.CharField(max_length=32)
     Meta = forms.CharField()
     Data = forms.CharField()
@@ -44,5 +46,5 @@ def dispatch(request):
             return HttpResponse(err.__unicode__(), status=500)
     else:
         return render_to_response('register.html',
-                    {'uf': dispatchForm()})
+                    {'uf': DispatchForm()})
 

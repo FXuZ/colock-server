@@ -18,16 +18,25 @@ def get_friend_list(meta, data):
 
 
 @utils.hook()
-def hash2uid(input_hash_lst):
+def hash2uid(meta, data):
     # returns query list
 
-    #######################
-    query_lst = []
-    for each in input_hash_lst:
-        query_lst.append(User.objects.get(phone_hash=each))
-    return query_lst
-    ########################
+    for hash_ite in data['phone_hash']:
+        qry = User.objects.filter(phone_hash=hash_ite)
+        ret = []
+        if len(qry) != 0:
+            try:
+                ####################
+                # low efficiency
+                ####################
+                tmp_1, tmp_2, data = add_friend(meta=meta, data={'dest_uid': qry[0].id})
+                ret.append([data['reg_num']])
 
+        #############
+            except:
+                pass
+        return ret
+        ############
 
 @utils.hook()
 def nickname2uid(meta, data):

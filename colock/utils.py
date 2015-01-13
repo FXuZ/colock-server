@@ -24,11 +24,13 @@ def hook(*names):
 
     return decorator
 
+
 def call_hook(name, *args):
     return hooks[name]["func"](*args)
 
 @hook("test")
-def testdeco(meta, data):
+def testdeco(action, meta, data):
+    print action
     print meta
     print data
 
