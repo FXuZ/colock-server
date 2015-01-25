@@ -29,14 +29,13 @@ def hash2uid(meta, data):
                 ####################
                 # low efficiency
                 ####################
-                tmp_1, tmp_2, data = add_friend(meta=meta, data={'dest_uid': qry[0].id})
-                ret.append([data['reg_num']])
-
+                add_friend(meta=meta, data={'dest_uid': qry[0].id})
+                ret.append([qry[0].id, hash_ite])
         #############
-            except:
+            except FriendshipError:
                 pass
         return ret
-        ############
+
 
 @utils.hook()
 def nickname2uid(meta, data):
@@ -75,15 +74,17 @@ def add_friend(meta, data):
             raise BlockedfriendError
 
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
+    dest = User.objects.get(id=dest_uid)
     if len(friendship) == 0:
         Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=1).save()
-        dest = User.objects.get(id=dest_uid)
-        return '', {'status': 'done'}, {'reg_num': dest.reg_num, 'phone_num': dest.phone_num}
+        return '', {'status': 'done'}, {'reg_num': dest.region_num, 'phone_num': dest.phone_num}
     else:
         if friendship[0].friendship_type == 0:
             raise BlockfriendError
         if friendship[0].friendship_type != 1:
             raise FriendExistError
+        # below is when type==1
+        return '', {'status': 'done'}, {'reg_num': dest.region_num, 'phone_num': dest.phone_num}
 
 
 @utils.hook()
@@ -94,7 +95,7 @@ def del_friend(meta, data):
     if len(friendship) == 0:
         raise FriendNotExistError
     if friendship[0].friendship_type == 0:
-        raise NoNeedError
+        raise BlockfriendError
     friendship[0].friendship_type = -1
     return '', {'status': 'done'}, {}
 
@@ -110,6 +111,7 @@ def block_friend(meta, data):
     else:
         friendship[0].friendship_type = 0
     return '', {'status': 'done'}, {}
+
 
 @utils.hook()
 def unblock_friend(meta, data):

@@ -3,7 +3,7 @@
     "add_friend":{
       "dest_uid":["is_valid_uid" ]
     },
-    "delete_friend":{
+    "del_friend":{
       "dest_uid":["is_valid_uid" ]
     },
     "block_friend":{
