@@ -88,10 +88,11 @@ def send(request):
         uf = SendForm()
         return render_to_response('register.html', {'uf':uf})
 
+
 @csrf_exempt
 def download(request):
     if request.method == "POST":
-        msg_id = int( request.POST["message_id"] )
+        msg_id = int(request.POST["message_id"])
         msg_key = request.POST["message_key"]
         msg = Message.objects.get(id=msg_id)
         if msg.message_key == msg_key and msg.exist:

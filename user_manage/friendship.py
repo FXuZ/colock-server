@@ -9,9 +9,12 @@ from colock import utils
 def get_friend_list(meta, data):
     src_uid = meta['uid']
     query = Friendship.objects.filter(src_uid=src_uid)
-    if len(query) == 0:
-        raise UserNotExistError
-    return query
+    serial = [i.dest_uid for i in query]
+    return '', {'status': 'done'}, {'query': serial}
+
+# this is used when you switched to a new phone, we return all your friends
+
+
 
 # adding friend needs to search first for the uid and information
 # then use the information to add friend
@@ -20,32 +23,31 @@ def get_friend_list(meta, data):
 @utils.hook()
 def hash2uid(meta, data):
     # returns query list
-
-    for hash_ite in data['phone_hash']:
+    for hash_ite in data['phone_hash_list']:
         qry = User.objects.filter(phone_hash=hash_ite)
         ret = []
-        if len(qry) != 0:
+        for ii in range(len(qry)):
             try:
                 ####################
                 # low efficiency
                 ####################
-                add_friend(meta=meta, data={'dest_uid': qry[0].id})
-                ret.append(unicode(qry[0].id))
+                add_friend(meta, {'dest_uid': qry[ii].id})
                 ret.append(unicode(hash_ite))
+                ret.append(qry[ii].id)
         #############
             except FriendshipError:
                 pass
         return '', {'status': 'done'}, {'query': ret}
 
 
-@utils.hook()
-def nickname2uid(meta, data):
-    # returns query list
-    input_nickname = data['nickname']
-    query = User.objects.filter(nickname=input_nickname)
-    if len(query) == 0:
-        raise UserNotExistError
-    return query
+# @utils.hook()
+# def nickname2uid(meta, data):
+#     # returns query list
+#     input_nickname = data['nickname']
+#     query = User.objects.filter(nickname=input_nickname)
+#     if len(query) == 0:
+#         raise UserNotExistError
+#     return query
 
 
 def is_friend_of(meta, data):
