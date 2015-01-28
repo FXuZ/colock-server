@@ -30,11 +30,12 @@ def hash2uid(meta, data):
                 # low efficiency
                 ####################
                 add_friend(meta=meta, data={'dest_uid': qry[0].id})
-                ret.append([qry[0].id, hash_ite])
+                ret.append(unicode(qry[0].id))
+                ret.append(unicode(hash_ite))
         #############
             except FriendshipError:
                 pass
-        return ret
+        return '', {'status': 'done'}, {'query': ret}
 
 
 @utils.hook()

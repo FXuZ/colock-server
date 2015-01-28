@@ -94,7 +94,7 @@ def download(request):
         msg_id = int( request.POST["message_id"] )
         msg_key = request.POST["message_key"]
         msg = Message.objects.get(id=msg_id)
-        if msg.message_key == msg_key:
+        if msg.message_key == msg_key and msg.exist:
             msg.exist = False
             msg.save()
             msg_key = injection_filter(msg_key)

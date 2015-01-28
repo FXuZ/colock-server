@@ -14,6 +14,9 @@
     },
     "get_friend_list":{
     },
+    "hash2uid":{
+        "hash_lst":[]
+    },
     "srch_phone":{
       "reg_num":[],
       "phone_num":[]
