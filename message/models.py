@@ -14,15 +14,25 @@ class Message(models.Model):
         instance.filetype = ext
         return os.path.join( upload_prefix, "%s%s" % (newfn, ext) )
 
+    def new_filename_tuya(instance, filename):
+        fn, ext = os.path.splitext(filename)
+        newfn = message_key_gen( instance.sender_uid,
+                instance.receiver_uid, str( instance.send_time ) )
+        instance.filetype = ext
+        return os.path.join( upload_prefix, "%s%s%s" % (newfn, '_tuya', ext) )
+
     sender_uid = models.IntegerField()
     receiver_uid = models.IntegerField()
     message_key = models.CharField(max_length=32)
     send_time = models.DateTimeField(default=timezone.now)
     # no () means it's called every time instead of only when loading the model
     exist = models.BooleanField(default=True)
-    filetype = models.CharField(max_length=10, default=".png")
 
-    img = models.ImageField(upload_to=new_filename)
+    filetype = models.CharField(max_length=10, default="")
+    img = models.ImageField(upload_to=new_filename, blank=True)
+
+    filetype_tuya = models.CharField(max_length=10, default="")
+    tuya = models.ImageField(upload_to=new_filename_tuya, blank=True)
 
     class Meta:
         ordering = ('receiver_uid',)

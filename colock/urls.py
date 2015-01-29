@@ -18,4 +18,6 @@ urlpatterns = patterns('',
     url(r'^send/', message.views.send),
     url(r'^download/', message.views.download),
     url(r'^dispatch/', colock.dispatch.dispatch),
+    url(r'^newsend/', message.views.newsend),
+    url(r'^newdownload/', message.views.newdownload),
 )

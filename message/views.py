@@ -25,6 +25,8 @@ from django.conf import settings
 # from django.forms import forms
 from django import forms
 
+import base64
+
 
 class SendForm(forms.Form):
     receiver_uid = forms.IntegerField()
@@ -39,6 +41,34 @@ class SendForm(forms.Form):
         if img._size > settings.MAX_UPLOAD_SIZE:
             raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(img._size)))
         return img
+
+
+class SendNewForm(forms.Form):
+    receiver_uid = forms.IntegerField()
+    sender_uid = forms.IntegerField()
+    sender_ukey = forms.CharField(max_length=32)
+    # filetype = forms.CharField(max_length=10)
+    img = forms.ImageField(required=False)
+    tuya = forms.ImageField(required=False)
+
+    def clean_img(self):
+        img = self.cleaned_data['img']
+        if img:
+            content_type = img.content_type.split('/')[0]
+            if img._size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(img._size)))
+            return img
+
+    def clean_tuya(self):
+        img = self.cleaned_data['tuya']
+        if img:
+            content_type = img.content_type.split('/')[0]
+            if img._size > settings.MAX_UPLOAD_SIZE:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(img._size)))
+            return img
+
+
+    #### They can't be both empty, this need to be checked
 
 
 class DownloadForm(forms.Form):
@@ -110,8 +140,87 @@ def download(request):
 
     else:
         return render_to_response('register.html', {'uf': DownloadForm()})
-    # print request.POST
 
+
+@csrf_exempt
+def newsend(request):
+    if request.method == "POST":
+        send_form = SendNewForm(request.POST, request.FILES)
+        if send_form.is_valid():
+            sender_uid = send_form.cleaned_data['sender_uid']
+            sender_ukey = send_form.cleaned_data['sender_ukey']
+            try:
+                sender = User.objects.get(id=int(sender_uid))
+                receiver = User.objects.get(id=int(send_form.cleaned_data['receiver_uid']))
+            except ObjectDoesNotExist:
+                return HttpResponse('no such receiver id', status=404)
+            if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
+
+                new_message = Message()
+                new_message.sender_uid = sender_uid
+                new_message.receiver_uid = send_form.cleaned_data['receiver_uid']
+                new_message.send_time = timezone.now()
+                new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
+
+                if request.FILES.get('img'):
+                    new_message.img = request.FILES.get('img')
+                    fn, new_message.filetype = os.path.splitext(new_message.img.name)
+                if request.FILES.get('tuya'):
+                    new_message.img = request.FILES.get('tuya')
+                    fn, new_message.filetype_tuya = os.path.splitext(new_message.img.name)
+
+                # new_message.filetype = send_form.cleaned_data['filetype']
+                new_message.save()
+
+                return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
+#                 igt_ret = pushMsgToSingle(sender, receiver, new_message)
+#                 if DEBUG == True:
+#                     print igt_ret
+                return HttpResponse(json.dumps(return_value, ensure_ascii=False))
+                # success and created new message
+            else:
+                return HttpResponse('Authen error or not friend with receiver')
+        else:
+            return render_to_response('register.html', {'uf': send_form, 'form': send_form})
+    else:
+        uf = SendNewForm()
+        return render_to_response('register.html', {'uf':uf})
+
+
+@csrf_exempt
+def newdownload(request):
+    if request.method == "POST":
+        msg_id = int(request.POST["message_id"])
+        msg_key = request.POST["message_key"]
+        msg = Message.objects.get(id=msg_id)
+        if msg.message_key == msg_key and msg.exist:
+            msg.exist = False
+            msg.save()
+            msg_key = injection_filter(msg_key)
+            filepath = ( "%s/%s%s" % ( upload_prefix, msg_key, msg.filetype ) )
+            # make a response
+
+            data1 = ''
+            data2 = ''
+
+            if len(msg.filetype) != 0:
+                with open(filepath, "rb") as f:
+                    data1 = f.read()
+                    data1 = data1.encode("base64")
+
+            if len(msg.filetype_tuya) != 0:
+                filepath_tuya = ( "%s/%s%s%s" % ( upload_prefix, msg_key, '_tuya', msg.filetype_tuya ) )
+                with open(filepath_tuya, "rb") as f:
+                    data2 = f.read()
+                    data2 = data2.encode("base64")
+
+            ret = {'filetype': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
+            return HttpResponse(json.dumps(ret))
+        else:
+            return HttpResponse("Message not exist", status=404)
+
+    else:
+        return render_to_response('register.html', {'uf': DownloadForm()})
 
 
 
