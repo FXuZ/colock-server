@@ -17,12 +17,5 @@
     "hash2uid":{
         "phone_hash_list":[]
     },
-    "srch_phone":{
-      "reg_num":[],
-      "phone_num":[]
-    },
-    "srch_nickname":{
-      "nickname":[]
-    }
   }
 }
