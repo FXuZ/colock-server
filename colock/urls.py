@@ -20,4 +20,5 @@ urlpatterns = patterns('',
     url(r'^dispatch/', colock.dispatch.dispatch),
     url(r'^newsend/', message.views.newsend),
     url(r'^newdownload/', message.views.newdownload),
+    url(r'^posttest/', colock.dispatch.post_test)
 )

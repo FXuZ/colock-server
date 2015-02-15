@@ -48,3 +48,18 @@ def dispatch(request):
         return render_to_response('register.html',
                     {'uf': DispatchForm()})
 
+
+@csrf_exempt
+def post_test(request):
+    if request.method == "POST":
+        action = request.POST["Action"]
+        meta = request.POST["Meta"]
+        data = request.POST["Data"]
+        n = "\n"
+        ret = action + n + meta + n + data
+        return HttpResponse(ret)
+    else:
+        return render_to_response('register.html',
+                    {'uf': DispatchForm()})
+
+
