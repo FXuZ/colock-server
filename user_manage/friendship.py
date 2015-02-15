@@ -37,7 +37,7 @@ def hash2uid(meta, data):
         #############
             except FriendshipError:
                 pass
-        return '', {'status': 'done'}, {'query': ret}
+    return '', {'status': 'done'}, {'query': ret}
 
 
 # @utils.hook()
