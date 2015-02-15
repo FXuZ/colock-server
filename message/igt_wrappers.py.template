@@ -47,9 +47,10 @@ def pushMsgToSingle(sender, receiver, message):
 
 def makeMessage(sender, receiver, message):
     msg_body = {
-        "sender_region": sender.region_num,
-        "sender_phone": hashlib.md5(sender.phone_num).digest(),
+        "type": "message",
+        "sender_id": sender.id,
         "message_key": message.message_key,
+        "message_id": message.id,
         "send_time": message.send_time,
     }
     return json.dump(msg_body)
