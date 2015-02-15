@@ -9,6 +9,7 @@ from igetui.igt_message import IGtSingleMessage
 from igetui.igt_target import Target
 import json
 import hashlib
+from colock import key_generator
 
 # add your own appkey, appid, mastersecret and appsecret from getui
 APPKEY = ""
@@ -29,7 +30,7 @@ def pushMsgToSingle(sender, receiver, message):
     trasmission_data.appId = APPID
     trasmission_data.appKey = APPKEY
     trasmission_data.transmissionContent = makeMessage(sender, receiver, message)
-    trasmission_data.setPushInfo("", 2, "", "", "", "", "", 1)
+    trasmission_data.setPushInfo("", 2, "", "", "", "", "", "")
 
     igt_message = IGtSingleMessage()
     igt_message.isOffline = True
@@ -47,12 +48,11 @@ def pushMsgToSingle(sender, receiver, message):
 
 def makeMessage(sender, receiver, message):
     msg_body = {
-        "type": "message",
-        "sender_id": sender.id,
+        "sender_region": sender.region_num,
+        "sender_phone": key_generator.phone_hash_gen(sender.region_num, sender.phone_num),
         "message_key": message.message_key,
-        "message_id": message.id,
-        "send_time": message.send_time,
+        "send_time": str(message.send_time),
     }
-    return json.dump(msg_body)
+    return json.dumps(msg_body)
 
 
