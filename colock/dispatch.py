@@ -42,7 +42,7 @@ def dispatch(request):
                              "Data": response_data}
             response.write(json.dumps(response_dict))
             return response
-        except Error.CustomError as err:
+        except (Error.CustomError, Exception) as err:
             return HttpResponse(err.__unicode__(), status=500)
     else:
         return render_to_response('register.html',
