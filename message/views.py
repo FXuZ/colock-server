@@ -199,14 +199,14 @@ def newdownload(request):
             data1 = ''
             data2 = ''
 
-            filepath = ( "%s/%s%s" % ( settings.BASE_DIR+'/' +upload_prefix, msg_key, msg.filetype ) )
+            filepath = ( "%s/%s%s" % ( settings.BASE_DIR+'/' +upload_prefix+'/' + upload_prefix, msg_key, msg.filetype ) )
             if len(msg.filetype) != 0:
                 with open(filepath, "rb") as f:
                     data1 = f.read()
                     data1 = data1.encode("base64")
 
             if len(msg.filetype_tuya) != 0:
-                filepath_tuya = ( "%s/%s%s%s" % ( settings.BASE_DIR+'/' + upload_prefix, msg_key, '_tuya', msg.filetype_tuya ) )
+                filepath_tuya = ( "%s/%s%s%s" % ( settings.BASE_DIR+'/' + upload_prefix+'/' + upload_prefix, msg_key, '_tuya', msg.filetype_tuya ) )
                 with open(filepath_tuya, "rb") as f:
                     data2 = f.read()
                     data2 = data2.encode("base64")
