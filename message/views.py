@@ -173,7 +173,7 @@ def newsend(request):
                 new_message.save()
 
                 return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
-#                 igt_ret = pushMsgToSingle(sender, receiver, new_message)
+                igt_ret = pushMsgToSingle(sender, receiver, new_message)
 #                 if DEBUG == True:
 #                     print igt_ret
                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
