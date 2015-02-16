@@ -211,7 +211,7 @@ def newdownload(request):
                     data2 = f.read()
                     data2 = data2.encode("base64")
 
-            ret = {'filetype': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
+            ret = {'filetype1': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
 
             msg.exist = False
             msg.save()
