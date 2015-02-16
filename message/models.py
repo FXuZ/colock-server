@@ -18,7 +18,7 @@ class Message(models.Model):
         fn, ext = os.path.splitext(filename)
         newfn = message_key_gen( instance.sender_uid,
                 instance.receiver_uid, str( instance.send_time ) )
-        instance.filetype = ext
+        instance.filetype_tuya = ext
         return os.path.join( upload_prefix, "%s%s%s" % (newfn, '_tuya', ext) )
 
     sender_uid = models.IntegerField()
