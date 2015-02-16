@@ -194,27 +194,27 @@ def newdownload(request):
         msg_key = request.POST["message_key"]
         msg = Message.objects.get(id=msg_id)
         if msg.message_key == msg_key and msg.exist:
-            msg.exist = False
-            msg.save()
             msg_key = injection_filter(msg_key)
-            filepath = ( "%s/%s%s" % ( upload_prefix, msg_key, msg.filetype ) )
             # make a response
-
             data1 = ''
             data2 = ''
 
+            filepath = ( "%s/%s%s" % ( settings.BASE_DIR +upload_prefix, msg_key, msg.filetype ) )
             if len(msg.filetype) != 0:
                 with open(filepath, "rb") as f:
                     data1 = f.read()
                     data1 = data1.encode("base64")
 
             if len(msg.filetype_tuya) != 0:
-                filepath_tuya = ( "%s/%s%s%s" % ( upload_prefix, msg_key, '_tuya', msg.filetype_tuya ) )
+                filepath_tuya = ( "%s/%s%s%s" % ( settings.BASE_DIR + upload_prefix, msg_key, '_tuya', msg.filetype_tuya ) )
                 with open(filepath_tuya, "rb") as f:
                     data2 = f.read()
                     data2 = data2.encode("base64")
 
             ret = {'filetype': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
+
+            msg.exist = False
+            msg.save()
             return HttpResponse(json.dumps(ret))
         else:
             return HttpResponse("Message not exist", status=404)
