@@ -166,14 +166,14 @@ def newsend(request):
                     new_message.img = request.FILES.get('img')
                     fn, new_message.filetype = os.path.splitext(new_message.img.name)
                 if request.FILES.get('tuya'):
-                    new_message.tuya = request.FILES.get('tuya')
+                    new_message.img = request.FILES.get('tuya')
                     fn, new_message.filetype_tuya = os.path.splitext(new_message.img.name)
 
                 # new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
 
                 return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
-#                 igt_ret = pushMsgToSingle(sender, receiver, new_message)
+                igt_ret = pushMsgToSingle(sender, receiver, new_message)
 #                 if DEBUG == True:
 #                     print igt_ret
                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
