@@ -167,7 +167,7 @@ def newsend(request):
                     fn, new_message.filetype = os.path.splitext(new_message.img.name)
                 if request.FILES.get('tuya'):
                     new_message.tuya = request.FILES.get('tuya')
-                    fn, new_message.filetype_tuya = os.path.splitext(new_message.img.name)
+                    fn, new_message.filetype_tuya = os.path.splitext(new_message.tuya.name)
 
                 # new_message.filetype = send_form.cleaned_data['filetype']
                 new_message.save()
