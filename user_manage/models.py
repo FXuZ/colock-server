@@ -1,8 +1,16 @@
 from django.db import models
 from django.utils import timezone
+import os
+
+upload_prefix = 'user_logo/'
 
 
 class User(models.Model):
+
+    def new_filename(instance, filename):
+        fn, ext = os.path.splitext(filename)
+        newfn = instance.id
+        return os.path.join( upload_prefix, "%s%s" % (newfn, ext) )
 
     cid = models.CharField(max_length=32)
     ukey = models.CharField(max_length=32)
@@ -14,6 +22,9 @@ class User(models.Model):
     reg_time = models.DateTimeField(default=timezone.now)
     phone_hash = models.CharField(max_length=32, db_index=True)
     # no () means it's called every time instead of only when loading the model
+
+    user_name = models.CharField(max_length=32)
+    user_logo = models.ImageField(upload_to=new_filename, blank=True)
 
     def __unicode__(self):
         return unicode(self.id)
