@@ -13,7 +13,7 @@ import json
 class RegisterForm(ModelForm):
     class Meta:
         model = User
-        fields = ['cid', 'phone_num', 'region_num', 'nickname']
+        fields = ['cid', 'phone_num', 'region_num', 'nickname', 'user_name', 'user_logo']
 
 
 class RegisterReturnForm(forms.Form):
