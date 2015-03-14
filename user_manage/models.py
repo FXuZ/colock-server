@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 import os
 
-upload_prefix = 'user_logo/'
+upload_prefix = 'user_logo'
 
 
 class User(models.Model):
