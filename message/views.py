@@ -149,37 +149,41 @@ def newsend(request):
         if send_form.is_valid():
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
-            try:
-                sender = User.objects.get(id=int(sender_uid))
-                receiver = User.objects.get(id=int(send_form.cleaned_data['receiver_uid']))
-            except ObjectDoesNotExist:
-                return HttpResponse('no such receiver id', status=404)
-            if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
 
-                new_message = Message()
-                new_message.sender_uid = sender_uid
-                new_message.receiver_uid = send_form.cleaned_data['receiver_uid']
-                new_message.send_time = timezone.now()
-                new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
+            raw_list = send_form.cleaned_data['receiver_uid'].strip(',')
+            for receiver_uid in raw_list:
+                try:
+                    sender = User.objects.get(id=int(sender_uid))
+                    receiver = User.objects.get(id=int(receiver_uid))
+                except ObjectDoesNotExist:
+                    return HttpResponse('no such receiver id', status=404)
+                if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
 
-                if request.FILES.get('img'):
-                    new_message.img = request.FILES.get('img')
-                    fn, new_message.filetype = os.path.splitext(new_message.img.name)
-                if request.FILES.get('tuya'):
-                    new_message.tuya = request.FILES.get('tuya')
-                    fn, new_message.filetype_tuya = os.path.splitext(new_message.tuya.name)
+                    new_message = Message()
+                    new_message.sender_uid = sender_uid
+                    new_message.receiver_uid = receiver_uid
+                    new_message.send_time = timezone.now()
+                    new_message.message_key = message_key_gen(sender_uid, new_message.receiver_uid, new_message.send_time)
 
-                # new_message.filetype = send_form.cleaned_data['filetype']
-                new_message.save()
+                    if request.FILES.get('img'):
+                        new_message.img = request.FILES.get('img')
+                        fn, new_message.filetype = os.path.splitext(new_message.img.name)
+                    if request.FILES.get('tuya'):
+                        new_message.tuya = request.FILES.get('tuya')
+                        fn, new_message.filetype_tuya = os.path.splitext(new_message.tuya.name)
 
-                return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
-                igt_ret = pushMsgToSingle(sender, receiver, new_message)
-#                 if DEBUG == True:
-#                     print igt_ret
+                    # new_message.filetype = send_form.cleaned_data['filetype']
+                    new_message.save()
+
+                    return_value = {'message_id': new_message.id, 'message_key': new_message.message_key}
+                    igt_ret = pushMsgToSingle(sender, receiver, new_message)
+        #                 if DEBUG == True:
+        #                     print igt_ret
+                    # success and created new message
+                else:
+                    return HttpResponse('Authen error or not friend with receiver')
+
                 return HttpResponse(json.dumps(return_value, ensure_ascii=False))
-                # success and created new message
-            else:
-                return HttpResponse('Authen error or not friend with receiver')
         else:
             return render_to_response('register.html', {'uf': send_form, 'form': send_form})
     else:
