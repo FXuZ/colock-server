@@ -150,7 +150,7 @@ def newsend(request):
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
 
-            raw_list = send_form.cleaned_data['receiver_uid'].strip(',')
+            raw_list = str(send_form.cleaned_data['receiver_uid']).strip(',')
             for receiver_uid in raw_list:
                 try:
                     sender = User.objects.get(id=int(sender_uid))
