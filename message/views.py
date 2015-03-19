@@ -156,9 +156,7 @@ def newsend(request):
                     sender = User.objects.get(id=int(sender_uid))
                     receiver = User.objects.get(id=int(receiver_uid))
                 except ObjectDoesNotExist:
-                    #return HttpResponse('no such receiver id', status=404)
-                    #return HttpResponse(str(int(sender_uid))+','+str(int(receiver_uid)))
-                    return HttpResponse(raw_list)
+                    return HttpResponse('no such receiver id', status=404)
 
                 if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
 
