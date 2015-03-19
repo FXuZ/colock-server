@@ -150,14 +150,14 @@ def newsend(request):
             sender_uid = send_form.cleaned_data['sender_uid']
             sender_ukey = send_form.cleaned_data['sender_ukey']
 
-            raw_list = str(send_form.cleaned_data['receiver_uid']).strip(',')
+            raw_list = str(send_form.cleaned_data['receiver_uid']).split(',')
             for receiver_uid in raw_list:
                 try:
                     sender = User.objects.get(id=int(sender_uid))
                     receiver = User.objects.get(id=int(receiver_uid))
                 except ObjectDoesNotExist:
-                    # return HttpResponse('no such receiver id', status=404)
-                    return HttpResponse(str(int(sender_uid))+str(int(receiver_uid)))
+                    return HttpResponse('no such receiver id', status=404)
+
                 if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
 
                     new_message = Message()
