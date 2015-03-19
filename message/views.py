@@ -44,7 +44,7 @@ class SendForm(forms.Form):
 
 
 class SendNewForm(forms.Form):
-    receiver_uid = forms.IntegerField()
+    receiver_uid = forms.CharField()
     sender_uid = forms.IntegerField()
     sender_ukey = forms.CharField(max_length=32)
     # filetype = forms.CharField(max_length=10)
