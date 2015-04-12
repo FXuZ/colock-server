@@ -23,9 +23,9 @@ def get_friend_list(meta, data):
 @utils.hook()
 def hash2uid(meta, data):
     # returns query list
+    ret = []
     for hash_ite in data['phone_hash_list']:
         qry = User.objects.filter(phone_hash=hash_ite)
-        ret = []
         for ii in range(len(qry)):
             try:
                 ####################
