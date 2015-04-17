@@ -3,7 +3,6 @@ from user_manage.models import User
 from user_manage.models import Friendship
 from colock.Error import *
 from colock import utils
-import os
 
 
 @utils.hook()
@@ -130,22 +129,4 @@ def unblock_friend(meta, data):
     friendship[0].friendship_type = 1
     # Action, Meta, Data
     return '', {'status': 'done'}, {}
-
-
-@utils.hook()
-def search_username(meta, data):
-    src_uid = meta['uid']
-    username = str(data['username'])
-    query = User.objects.filter(user_name=username)
-    query2 = User.objects.filter(user_name=username, user_logo__isnull=True)
-    if len(query) == 0:
-        raise FriendNotExistError
-    data = {'id': query[0].id, 'nickname': query[0].nickname}
-
-    if len(query2) != len(query):
-        with open(query[0].user_logo) as f:
-            fn, ext = os.path.splitext(query[0].user_logo)
-            data['user_logo': f.read().encode("base64"), 'filetype':ext]
-    return '', {'status': 'done'}, data
-
 
