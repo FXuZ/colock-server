@@ -16,6 +16,9 @@
     },
     "hash2uid":{
         "phone_hash_list":[]
+    },
+    "search_nickname":{
+        "nickname":[]
     }
   }
 }

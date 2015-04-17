@@ -130,3 +130,11 @@ def unblock_friend(meta, data):
     # Action, Meta, Data
     return '', {'status': 'done'}, {}
 
+
+@utils.hook()
+def search_nickname(meta, data):
+    src_uid = meta['uid']
+    nickname = data['nickname']
+    query_user = User.objects.filter(nickname)
+
+

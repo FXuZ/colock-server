@@ -184,7 +184,7 @@ def newsend(request):
                 else:
                     return HttpResponse('Authen error or not friend with receiver')
 
-                return HttpResponse(json.dumps(return_value, ensure_ascii=False))
+            return HttpResponse(json.dumps(return_value, ensure_ascii=False))
         else:
             return render_to_response('register.html', {'uf': send_form, 'form': send_form})
     else:
@@ -226,7 +226,6 @@ def newdownload(request):
 
     else:
         return render_to_response('register.html', {'uf': DownloadForm()})
-
 
 
 
