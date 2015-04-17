@@ -135,7 +135,7 @@ def unblock_friend(meta, data):
 @utils.hook()
 def search_username(meta, data):
     src_uid = meta['uid']
-    username = data['username']
+    username = str(data['username'])
     query = User.objects.filter(user_name=username)
     query2 = User.objects.filter(user_name=username, user_logo__isnull=True)
     if len(query) == 0:
