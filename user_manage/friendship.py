@@ -2,7 +2,7 @@ __author__ = 'Chengyu'
 from user_manage.models import User
 from user_manage.models import Friendship
 from colock.Error import *
-from colock import utils
+from colock import utils, settings
 import os
 
 
@@ -142,9 +142,15 @@ def search_username(meta, data):
         raise FriendNotExistError
     data = {'id': query[0].id, 'nickname': query[0].nickname}
 
+
+    ###
+    User_Logo_Prefix = settings.BASE_DIR+'/upload/'
+    ###
+
     if len(query2) != len(query):
         try:
             path = query[0].user_logo.path
+            path = os.path.join(User_Logo_Prefix, path)
             fn, ext = os.path.splitext(path)
             f = open('path')
             data['user_logo': f.encode("base64"), 'filetype': ext]
