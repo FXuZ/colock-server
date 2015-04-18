@@ -145,8 +145,12 @@ def search_username(meta, data):
     if len(query2) != len(query):
         path = query[0].user_logo.path
         fn, ext = os.path.splitext(path)
-        with open('path') as f:
+        try:
+            f = open('path')
             data['user_logo': f.encode("base64"), 'filetype': ext]
+        except:
+            pass
+
     return '', {'status': 'done'}, data
 
 
