@@ -153,7 +153,8 @@ def search_username(meta, data):
         path = User_Logo_Prefix + path
         fn, ext = os.path.splitext(path)
         f = open(path)
-        data['user_logo': f.read().encode("base64"), 'filetype': ext]
+        content = f.read().encode("base64")
+        data['user_logo': content, 'filetype': ext]
         # except:
         #     pass
 
