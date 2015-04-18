@@ -143,8 +143,10 @@ def search_username(meta, data):
     data = {'id': query[0].id, 'nickname': query[0].nickname}
 
     if len(query2) != len(query):
-        # fn, ext = os.path.splitext(query[0].user_logo)
-        data['user_logo': query[0].user_logo.encode("base64")] #, 'filetype':ext]
+        path = query[0].user_logo.path
+        fn, ext = os.path.splitext(path)
+        with open('path') as f:
+            data['user_logo': f.encode("base64"), 'filetype': ext]
     return '', {'status': 'done'}, data
 
 
