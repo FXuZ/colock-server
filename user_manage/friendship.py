@@ -148,14 +148,14 @@ def search_username(meta, data):
     ###
 
     if len(query2) != len(query):
-        try:
-            path = query[0].user_logo.path
-            path = User_Logo_Prefix + path
-            fn, ext = os.path.splitext(path)
-            f = open('path')
-            data['user_logo': f.encode("base64"), 'filetype': ext]
-        except:
-            pass
+        # try:
+        path = query[0].user_logo.path
+        path = User_Logo_Prefix + path
+        fn, ext = os.path.splitext(path)
+        f = open('path')
+        data['user_logo': f.encode("base64"), 'filetype': ext]
+        # except:
+        #     pass
 
     return '', {'status': 'done'}, data
 
