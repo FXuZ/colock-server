@@ -225,7 +225,7 @@ def newdownload(request):
                     data2 = f.read()
                     data2 = data2.encode("base64")
 
-            ret = {'filetype1': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
+            ret = {'sender_uid': msg.sender_uid,'filetype1': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
 
             if len(msg.filetype) == 0 and len(msg.filetype_tuya) == 0:
                 meta = {'msg_type': 'add_friend'}
