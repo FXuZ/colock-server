@@ -192,6 +192,15 @@ def newsend(request):
         return render_to_response('register.html', {'uf':uf})
 
 
+def response(action, meta, data):
+    resp = HttpResponse()
+    response_dict = {"Action": action,
+                     "Meta": meta,
+                     "Data": data}
+    resp.write(json.dumps(response_dict))
+    return resp
+
+
 @csrf_exempt
 def newdownload(request):
     if request.method == "POST":
@@ -217,6 +226,33 @@ def newdownload(request):
                     data2 = data2.encode("base64")
 
             ret = {'filetype1': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
+
+            if len(msg.filetype) == 0 and len(msg.filetype_tuya) == 0:
+                meta = {'msg_type': 'add_friend'}
+
+######## repitition codes
+                query = User.objects.filter(id=msg.sender_uid)
+                query2 = User.objects.filter(id=msg.sender_uid)
+
+                data = {'id': query[0].id, 'nickname': query[0].nickname}
+                ###
+                User_Logo_Prefix = settings.BASE_DIR+'/upload/'
+                ###
+
+                if len(query2) != len(query):
+                    try:
+                        path = query[0].user_logo.url
+                        path = User_Logo_Prefix + path
+                        fn, ext = os.path.splitext(path)
+                        f = open(path)
+                        content = f.read().encode("base64")
+                        data['user_logo'] =  content
+                        data['filetype'] = ext
+                        f.close()
+                    except:
+                        pass
+
+                return response('', meta, data)
 
             msg.exist = False
             msg.save()
