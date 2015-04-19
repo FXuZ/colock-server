@@ -234,7 +234,7 @@ def newdownload(request):
                 query = User.objects.filter(id=msg.sender_uid)
                 query2 = User.objects.filter(id=msg.sender_uid)
 
-                data = {'id': query[0].id, 'nickname': query[0].nickname}
+                data = {'id': query[0].id, 'nickname': query[0].nickname, 'nickname': query[0].nickname, 'user_name': query[0].user_name, 'region_num': query[0].region_num, 'phone_num': query[0].phone_num}
                 ###
                 User_Logo_Prefix = settings.BASE_DIR+'/upload/'
                 ###
@@ -246,13 +246,15 @@ def newdownload(request):
                         fn, ext = os.path.splitext(path)
                         f = open(path)
                         content = f.read().encode("base64")
-                        data['user_logo'] =  content
+                        data['user_logo'] = content
                         data['filetype'] = ext
                         f.close()
                     except:
                         pass
 
                 return response('', meta, data)
+
+#########
 
             msg.exist = False
             msg.save()
