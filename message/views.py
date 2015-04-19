@@ -240,17 +240,21 @@ def newdownload(request):
                 ###
 
                 if len(query2) != len(query):
-                    # try:
-                    path = query[0].user_logo.url
-                    path = User_Logo_Prefix + path
-                    fn, ext = os.path.splitext(path)
-                    f = open(path)
-                    content = f.read().encode("base64")
-                    data['user_logo'] = content
-                    data['filetype'] = ext
-                    f.close()
-                    # except:
-                    #     pass
+                    try:
+                        path = query[0].user_logo.url
+                        path = User_Logo_Prefix + path
+                        fn, ext = os.path.splitext(path)
+                        f = open(path)
+                        content = f.read().encode("base64")
+                        data['user_logo'] = content
+                        data['filetype'] = ext
+                        f.close()
+                    except:
+                        pass
+
+                meta['debug1'] = [i for i in query]
+                meta['debug2'] = [i for i in query2]
+
 
                 return response('', meta, data)
 
