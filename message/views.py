@@ -158,7 +158,7 @@ def newsend(request):
                 except ObjectDoesNotExist:
                     return HttpResponse('no such receiver id', status=404)
 
-                if user_authen(sender_uid, sender_ukey) and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
+                if user_authen(sender_uid, sender_ukey): ##and is_friend_of(meta={'uid': sender_uid}, data={'dest_uid': receiver.id}):
 
                     new_message = Message()
                     new_message.sender_uid = sender_uid
