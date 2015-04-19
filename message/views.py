@@ -225,7 +225,7 @@ def newdownload(request):
                     data2 = f.read()
                     data2 = data2.encode("base64")
 
-            ret = {'sender_uid': msg.sender_uid,'filetype1': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
+            ret = {'sender_uid': msg.sender_uid, 'filetype1': msg.filetype, 'filetype2': msg.filetype_tuya, 'file1': data1, 'file2': data2}
 
             if len(msg.filetype) == 0 and len(msg.filetype_tuya) == 0:
                 meta = {'msg_type': 'add_friend'}
@@ -240,17 +240,17 @@ def newdownload(request):
                 ###
 
                 if len(query2) != len(query):
-                    try:
-                        path = query[0].user_logo.url
-                        path = User_Logo_Prefix + path
-                        fn, ext = os.path.splitext(path)
-                        f = open(path)
-                        content = f.read().encode("base64")
-                        data['user_logo'] = content
-                        data['filetype'] = ext
-                        f.close()
-                    except:
-                        pass
+                    # try:
+                    path = query[0].user_logo.url
+                    path = User_Logo_Prefix + path
+                    fn, ext = os.path.splitext(path)
+                    f = open(path)
+                    content = f.read().encode("base64")
+                    data['user_logo'] = content
+                    data['filetype'] = ext
+                    f.close()
+                    # except:
+                    #     pass
 
                 return response('', meta, data)
 
