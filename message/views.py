@@ -232,7 +232,7 @@ def newdownload(request):
 
 ######## repitition codes
                 query = User.objects.filter(id=msg.sender_uid)
-                query2 = User.objects.filter(id=msg.sender_uid)
+                query2 = User.objects.filter(id=msg.sender_uid, user_logo__isnull=True)
 
                 data = {'id': query[0].id, 'nickname': query[0].nickname, 'user_name': query[0].user_name, 'region_num': query[0].region_num, 'phone_num': query[0].phone_num}
                 ###
@@ -251,10 +251,6 @@ def newdownload(request):
                         f.close()
                     except:
                         pass
-
-                meta['debug1'] = [i for i in query]
-                meta['debug2'] = [i for i in query2]
-
 
                 return response('', meta, data)
 
