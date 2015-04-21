@@ -60,7 +60,7 @@ def register(request):
         uf = RegisterForm()
     return render_to_response('register.html', {'uf': uf})
 
-mobsms = MobSMS("key") ### add real keys here!!!
+mobsms = MobSMS("5fc5a301e100") ### add real keys here!!!
 
 @hook("verify")
 def verify(meta, data):
@@ -74,4 +74,4 @@ def verify(meta, data):
         user.verified = True
 
     user.save()
-    return res
+    return '', '', res
