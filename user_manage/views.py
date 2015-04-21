@@ -67,5 +67,11 @@ def verify(meta, data):
     uid = meta['uid']
     vcode = data['code']
     user = User.objects.get(id=uid)
+    user.verify_code = vcode
+    user.verified = False
     res = mobsms.verify_sms_code(user.region_num, user.phone_num, vcode)
+    if ( (json.loads(res))['status'] == 200 ):
+        user.verified = True
+
+    user.save()
     return res
