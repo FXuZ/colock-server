@@ -19,6 +19,9 @@
     },
     "search_username":{
         "username":[]
+    },
+    "verify":{
+      "code":[]
     }
   }
 }

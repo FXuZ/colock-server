@@ -21,6 +21,8 @@ class User(models.Model):
     nickname = models.CharField(max_length=32)
     reg_time = models.DateTimeField(default=timezone.now)
     phone_hash = models.CharField(max_length=32, db_index=True)
+    verify_code = models.CharField(max_length=32, default='')
+    verified = models.BooleanField(default=False)
     # no () means it's called every time instead of only when loading the model
 
     user_name = models.CharField(max_length=32)
