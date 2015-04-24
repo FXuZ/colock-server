@@ -41,11 +41,11 @@ def is_valid_phone_num(phone_num):
 
 
 @utils.hook()
-def is_valid_user_info_dict(dict):
+def is_valid_user_info_dict(info_dict):
     ALLOWED_KEY = {'cid': ['is_valid_cid'], 'region_num': ['is_valid_reg_num'], 'phone_num': ['is_valid_phone_num'],
                    'nick_name': ['is_valid_user_name'], 'user_logo': ['is_valid_user_logo'], 'filetype': ['is_valid_filetype']}
 
-    for (key, val) in dict.iteritems:
+    for (key, val) in info_dict.iteritems:
         if key not in ALLOWED_KEY:
             raise InvalidError
             # not allowed keys
