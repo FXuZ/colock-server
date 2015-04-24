@@ -4,6 +4,9 @@ from user_manage.models import Friendship
 from colock.Error import *
 from colock import utils, settings
 import os
+from colock.key_generator import phone_hash_gen
+import base64
+
 
 
 @utils.hook()
@@ -162,4 +165,23 @@ def search_username(meta, data):
 
     return '', {'status': 'done'}, data
 
+
+def update_user_info(meta, data):
+    info_dict = data['info_dict']
+    user = User.objects.get(id=int(meta.uid))
+    for (key, val) in info_dict.iteritems():
+        if key != 'user_logo' and key != 'filetype':
+            setattr(user, key, val)
+    if 'user_logo' in info_dict:
+        User_Logo_Prefix = settings.BASE_DIR+'/upload/user_logo/'
+        filename = User_Logo_Prefix + str(user.user_name) + info_dict['filetype']
+        with open(filename, 'r+') as f:
+            f.write(info_dict['user_logo'].decode('base64'))
+            user.user_logo(filename, f.read())
+
+    if ('region_num' in info_dict) or ('phone_num' in info_dict):
+        user.phone_hash = phone_hash_gen(user.region_num, user.phone_num)
+
+    user.save()
+    return '', {'status': 'done'}, {}
 

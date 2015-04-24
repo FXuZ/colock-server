@@ -40,6 +40,28 @@ def is_valid_phone_num(phone_num):
     return True
 
 
+# def validate_key(key, val):
+#     ALLOWED_KEY = {'cid': ['is_valid_cid'], 'region_num': ['is_valid_reg_num'], 'phone_num': ['is_valid_phone_num'], 'nick_name': [], 'user_name', 'user_logo'}
+#     if
+#
+
+
+
+
+def is_valid_user_info_dict(dict):
+    # for (key,val) in dict.iteritems:
+    #     if key not in ALLOWED_KEY:
+    #         raise InvalidError
+    #         # not allowed keys
+    #     if validate_key(key,val)
+    #
+    #
+    # # if phone change, phone_hash must change
+    #
+    #
+    return True
+
+
 def is_valid_dispatch(action, meta, data):
     # return (boolean, string), string is the error information, and if it's valid string will be blank
     try:
