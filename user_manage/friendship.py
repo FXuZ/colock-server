@@ -166,6 +166,7 @@ def search_username(meta, data):
     return '', {'status': 'done'}, data
 
 
+@utils.hook()
 def update_user_info(meta, data):
     info_dict = data['info_dict']
     user = User.objects.get(id=int(meta.uid))
