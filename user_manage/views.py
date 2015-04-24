@@ -6,7 +6,10 @@ from user_manage.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
+import requests
+
 from colock.key_generator import *
+from colock.utils import hook
 import json
 
 
@@ -20,6 +23,21 @@ class RegisterReturnForm(forms.Form):
     uid = forms.IntegerField()
     ukey = forms.CharField(max_length=32)
 
+class MobSMS:
+    def __init__(self, appkey):
+        self.appkey = appkey
+        self.verify_url = 'https://api.sms.mob.com/sms/verify'
+
+    def verify_sms_code(self, zone, phone, code, debug=False):
+        if debug:
+            return 200
+
+        data = {'appkey': self.appkey, 'phone': phone, 'zone': zone, 'code': code}
+        req = requests.post(self.verify_url, data=data, verify=False)
+        if req.status_code == 200:
+            j = req.json()
+            return j
+        return json.dumps({'status': 500})
 
 # this is not safe!!!
 @csrf_exempt
@@ -41,3 +59,19 @@ def register(request):
     else:
         uf = RegisterForm()
     return render_to_response('register.html', {'uf': uf})
+
+mobsms = MobSMS("5fc5a301e100") ### add real keys here!!!
+
+@hook("verify")
+def verify(meta, data):
+    uid = meta['uid']
+    vcode = data['code']
+    user = User.objects.get(id=uid)
+    user.verify_code = vcode
+    user.verified = False
+    res = mobsms.verify_sms_code(user.region_num, user.phone_num, vcode)
+    if ( (json.loads(res))['status'] == 200 ):
+        user.verified = True
+
+    user.save()
+    return '', '', res

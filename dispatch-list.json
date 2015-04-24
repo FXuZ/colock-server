@@ -20,8 +20,11 @@
     "search_username":{
         "username":[]
     },
-    "update_user_info":{
-        "info_dict":["is_valid_user_info_dict"]
+    "update_user_info": {
+        "info_dict": ["is_valid_user_info_dict"]
+    },
+    "verify":{
+      "code":[]
     }
   }
 }
