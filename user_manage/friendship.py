@@ -169,7 +169,7 @@ def search_username(meta, data):
 @utils.hook()
 def update_user_info(meta, data):
     info_dict = data['info_dict']
-    user = User.objects.get(id=int(meta.uid))
+    user = User.objects.get(id=int(meta['uid']))
     for (key, val) in info_dict.iteritems():
         if key != 'user_logo' and key != 'filetype':
             setattr(user, key, val)
