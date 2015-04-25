@@ -118,6 +118,8 @@ def block_friend(meta, data, img):
         tmp_friend.save()
     else:
         friendship[0].friendship_type = 0
+        friendship[0].save()
+
     return '', {'status': 'done'}, {}
 
 
