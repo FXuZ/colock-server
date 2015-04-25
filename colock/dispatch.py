@@ -34,7 +34,12 @@ def dispatch(request):
         action = request.POST["Action"]
         meta = request.POST["Meta"]
         data = request.POST["Data"]
-        img = request.FILES['Img']
+        img = "" ###### just filling the blank
+        try:
+            img = request.FILES['Img']
+        except:
+            pass
+
         try:
             action, meta, data = validation.is_valid_dispatch(action, meta, data)
             response_action, response_meta, response_data = utils.call_hook(action, meta, data, img)
