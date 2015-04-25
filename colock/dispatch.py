@@ -22,6 +22,7 @@ class DispatchForm(forms.Form):
     Action = forms.CharField(max_length=32)
     Meta = forms.CharField()
     Data = forms.CharField()
+    Img = forms.ImageField(required=False)
 
 for mod in colock.settings.DISPATCH_MANAGED_APPS:
     imported_modules.append(import_module(mod + ".views"))
@@ -33,9 +34,10 @@ def dispatch(request):
         action = request.POST["Action"]
         meta = request.POST["Meta"]
         data = request.POST["Data"]
+        img = request.POST["Files"]
         try:
             action, meta, data = validation.is_valid_dispatch(action, meta, data)
-            response_action, response_meta, response_data = utils.call_hook(action, meta, data)
+            response_action, response_meta, response_data = utils.call_hook(action, meta, data, img)
             response = HttpResponse()
             response_dict = {"Action": response_action,
                              "Meta": response_meta,

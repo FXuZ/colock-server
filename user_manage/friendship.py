@@ -10,7 +10,7 @@ import base64
 
 
 @utils.hook()
-def get_friend_list(meta, data):
+def get_friend_list(meta, data, img):
     src_uid = meta['uid']
     query = Friendship.objects.filter(src_uid=src_uid)
     serial = [i.dest_uid for i in query]
@@ -25,7 +25,7 @@ def get_friend_list(meta, data):
 
 
 @utils.hook()
-def hash2uid(meta, data):
+def hash2uid(meta, data, img):
     # returns query list
     ret = []
     for hash_ite in data['phone_hash_list']:
@@ -45,7 +45,7 @@ def hash2uid(meta, data):
 
 
 # @utils.hook()
-# def nickname2uid(meta, data):
+# def nickname2uid(meta, data, img):
 #     # returns query list
 #     input_nickname = data['nickname']
 #     query = User.objects.filter(nickname=input_nickname)
@@ -54,7 +54,7 @@ def hash2uid(meta, data):
 #     return query
 
 
-def is_friend_of(meta, data):
+def is_friend_of(meta, data, img):
     # only for server internal use
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
@@ -72,7 +72,7 @@ def is_friend_of(meta, data):
 
 
 @utils.hook()
-def add_friend(meta, data):
+def add_friend(meta, data, img):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
     friendship1 = Friendship.objects.filter(src_uid=dest_uid, dest_uid=src_uid)
@@ -96,7 +96,7 @@ def add_friend(meta, data):
 
 
 @utils.hook()
-def del_friend(meta, data):
+def del_friend(meta, data, img):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
@@ -109,7 +109,7 @@ def del_friend(meta, data):
 
 
 @utils.hook()
-def block_friend(meta, data):
+def block_friend(meta, data, img):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
@@ -122,7 +122,7 @@ def block_friend(meta, data):
 
 
 @utils.hook()
-def unblock_friend(meta, data):
+def unblock_friend(meta, data, img):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
@@ -136,7 +136,7 @@ def unblock_friend(meta, data):
 
 
 @utils.hook()
-def search_username(meta, data):
+def search_username(meta, data, img):
     src_uid = meta['uid']
     username = str(data['username'])
     query = User.objects.filter(user_name=username)
@@ -167,22 +167,22 @@ def search_username(meta, data):
 
 
 @utils.hook()
-def update_user_info(meta, data):
+def update_user_info(meta, data, img):
     info_dict = data['info_dict']
     user = User.objects.get(id=int(meta['uid']))
     for (key, val) in info_dict.iteritems():
         if key != 'user_logo' and key != 'filetype':
             setattr(user, key, val)
-    if 'user_logo' in info_dict:
-        User_Logo_Prefix = settings.BASE_DIR+'/upload/user_logo/'
-        filename = User_Logo_Prefix + str(user.user_name) + info_dict['filetype']
-        with open(filename, 'r+b') as f:
-            f.write(info_dict['user_logo'].decode('base64'))
-            user.user_logo(filename, f.read())
+    # if 'user_logo' in info_dict:
+    #     User_Logo_Prefix = settings.BASE_DIR+'/upload/user_logo/'
+    #     filename = User_Logo_Prefix + str(user.user_name) + info_dict['filetype']
+    #     with open(filename, 'r+b') as f:
+    #         f.write(info_dict['user_logo'].decode('base64'))
+    #         user.user_logo(filename, f.read())
 
     if ('region_num' in info_dict) or ('phone_num' in info_dict):
         user.phone_hash = phone_hash_gen(user.region_num, user.phone_num)
-
+    user.user_logo = img
     user.save()
     return '', {'status': 'done'}, {}
 
