@@ -176,7 +176,7 @@ def update_user_info(meta, data):
     if 'user_logo' in info_dict:
         User_Logo_Prefix = settings.BASE_DIR+'/upload/user_logo/'
         filename = User_Logo_Prefix + str(user.user_name) + info_dict['filetype']
-        with open(filename, 'wr') as f:
+        with open(filename, 'r+b') as f:
             f.write(info_dict['user_logo'].decode('base64'))
             user.user_logo(filename, f.read())
 
