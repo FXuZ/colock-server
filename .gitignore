@@ -55,7 +55,6 @@ target/
 
 # privacy
 colock/settings.py
-*igt_wrappers.py
 
 # pycharm project
 .idea
