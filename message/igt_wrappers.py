@@ -67,7 +67,7 @@ def pushMsgToSingle_dispatch(receiver, action, meta, data):
             'meta': meta,
             'data': data,
         }
-        return json.dump(msg_body)
+        return json.dumps(msg_body)
 
 
     push = IGeTui(HOST, APPKEY, MASTERSECRET)
