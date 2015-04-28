@@ -38,4 +38,5 @@ class Friendship(models.Model):
     dest_uid = models.IntegerField(default=0)
     friendship_type = models.IntegerField(default=1)
     # type0: src blocked dest, type1: src has phone num of dest, type2: src view dest as intimate
-
+    # type3: src blacklist dest,
+    # (block is not showing in front but can check at the backend, blacklist is completely not sending info )

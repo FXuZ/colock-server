@@ -108,9 +108,7 @@ def del_friend(meta, data, img):
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
     if len(friendship) == 0:
         raise FriendNotExistError
-    if friendship[0].friendship_type == 0:
-        raise BlockfriendError
-    friendship[0].friendship_type = -1
+    friendship[0].delete()
     return '', {'status': 'done'}, {}
 
 
@@ -194,3 +192,33 @@ def update_user_info(meta, data, img):
     user.save()
     return '', {'status': 'done'}, {}
 
+
+@utils.hook()
+def blacklist_friend(meta, data, img):
+    src_uid = meta['uid']
+    dest_uid = data['dest_uid']
+    friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
+    if len(friendship) == 0:
+            tmp_friend = Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=3)
+            tmp_friend.save()
+    else:
+        friendship[0].friendship_type = 3
+        friendship[0].save()
+    dest = User.objects.get(id=dest_uid)
+    igt.pushMsgToSingle_dispatch(dest, '', meta={'status': 'Friend_Blacklisted'}, data={'uid': src_uid})
+    return '', {'status': 'done'}, {}
+
+
+def unblock_friend(meta, data, img):
+    src_uid = meta['uid']
+    dest_uid = data['dest_uid']
+    friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
+    if len(friendship) == 0:
+        raise FriendNotExistError
+    if friendship[0].friendship_type != 0:
+        raise NoNeedError
+    friendship[0].friendship_type = 1
+    # Action, Meta, Data
+    dest = User.objects.get(id=dest_uid)
+    igt.pushMsgToSingle_dispatch(dest, '', meta={'status': 'Friend_unBlacklisted'}, data={'uid': src_uid})
+    return '', {'status': 'done'}, {}

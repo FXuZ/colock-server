@@ -25,6 +25,13 @@
     },
     "verify":{
       "code":[]
+    },
+    "blacklist_friend":{
+        "dest_uid":["is_valid_uid" ]
+    },
+    "unblacklist_friend":{
+        "dest_uid":["is_valid_uid" ]
     }
+
   }
 }
