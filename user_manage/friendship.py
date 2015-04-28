@@ -6,6 +6,7 @@ from colock import utils, settings
 import os
 from colock.key_generator import phone_hash_gen
 import base64
+import message.igt_wrappers as igt
 
 
 
@@ -82,9 +83,14 @@ def add_friend(meta, data, img):
 
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
     dest = User.objects.get(id=dest_uid)
+    src = User.objects.get(id=src_uid)
     if len(friendship) == 0:
         Friendship(src_uid=src_uid, dest_uid=dest_uid, friendship_type=1).save()
         dest = User.objects.get(id=dest_uid)
+
+        # give the other person a notification
+        igt.pushMsgToSingle_dispatch(receiver=dest, action='', meta={'status': 'Friend_Accepted'},
+                                     data={'reg_num': src.region_num, 'phone_num': src.phone_num, 'uid':src.id})
         return '', {'status': 'done'}, {'reg_num': dest.region_num, 'phone_num': dest.phone_num}
     else:
         if friendship[0].friendship_type == 0:

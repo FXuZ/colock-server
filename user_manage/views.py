@@ -11,12 +11,15 @@ import requests
 from colock.key_generator import *
 from colock.utils import hook
 import json
+import colock.Error
 
 
 class RegisterForm(ModelForm):
     class Meta:
         model = User
         fields = ['cid', 'phone_num', 'region_num', 'nickname', 'user_name', 'user_logo']
+
+    verify_code = forms.IntegerField()
 
 
 class RegisterReturnForm(forms.Form):
@@ -42,6 +45,14 @@ class MobSMS:
 # this is not safe!!!
 @csrf_exempt
 def register(request):
+
+    def register_verify(user, vcode):
+        res = mobsms.verify_sms_code(user.region_num, user.phone_num, vcode)
+        if (json.loads(res))['status'] == 200:
+            return True
+        else:
+            return False
+
     if request.method == "POST":
         reg_form = RegisterForm(request.POST)
         if reg_form.is_valid():
@@ -50,12 +61,17 @@ def register(request):
             new_user.ukey = user_key_gen(new_user.id, new_user.region_num, new_user.phone_num, new_user.reg_time)
             new_user.phone_hash = phone_hash_gen(new_user.region_num, new_user.phone_num)
             new_user.user_logo = request.FILES['user_logo']
-            new_user.save()
 
-            return_value = {'uid': new_user.id, 'ukey': new_user.ukey}
-            # ensure_ascii=False to handle Chinese
-            return HttpResponse(json.dumps(return_value, ensure_ascii=False))
-            # success and created new user
+            verify_code = request.POST['verify_code']
+
+            if register_verify(new_user.region_num, new_user.phone_num, verify_code):
+                new_user.save()
+                return_value = {'uid': new_user.id, 'ukey': new_user.ukey}
+                # ensure_ascii=False to handle Chinese
+                return HttpResponse(json.dumps(return_value, ensure_ascii=False))
+                # success and created new user
+            else:
+                return HttpResponse('Authen Error', status=500)
     else:
         uf = RegisterForm()
     return render_to_response('register.html', {'uf': uf})
