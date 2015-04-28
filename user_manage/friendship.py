@@ -72,6 +72,21 @@ def is_friend_of(meta, data, img):
             return True
 
 
+def can_send(sender_uid, receiver_uid):
+    # only for server internal use
+    # if not in blacklist, then you can send
+
+    if sender_uid == receiver_uid:
+        return True
+    friendship = Friendship.objects.filter(src_uid=receiver_uid, dest_uid=sender_uid)
+    if len(friendship) == 0:
+        return False
+    if friendship[0].friendship_type == 3:
+        return False
+    else:
+        return True
+
+
 @utils.hook()
 def add_friend(meta, data, img):
     src_uid = meta['uid']
@@ -209,7 +224,8 @@ def blacklist_friend(meta, data, img):
     return '', {'status': 'done'}, {}
 
 
-def unblock_friend(meta, data, img):
+@utils.hook()
+def unblacklist_friend(meta, data, img):
     src_uid = meta['uid']
     dest_uid = data['dest_uid']
     friendship = Friendship.objects.filter(src_uid=src_uid, dest_uid=dest_uid)
@@ -220,5 +236,5 @@ def unblock_friend(meta, data, img):
     friendship[0].friendship_type = 1
     # Action, Meta, Data
     dest = User.objects.get(id=dest_uid)
-    igt.pushMsgToSingle_dispatch(dest, '', meta={'status': 'Friend_unBlacklisted'}, data={'uid': src_uid})
+    igt.pushMsgToSingle_dispatch(dest, '', meta={'status': 'unBlacklist_friend'}, data={'uid': src_uid})
     return '', {'status': 'done'}, {}
