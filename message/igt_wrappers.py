@@ -76,7 +76,7 @@ def pushMsgToSingle_dispatch(receiver, action, meta, data):
     trasmission_data.appId = APPID
     trasmission_data.appKey = APPKEY
     trasmission_data.transmissionContent = makeMessage_generic(receiver, action, meta, data)
-    trasmission_data.setPushInfo("", 2, "", "", "", "", "", 1)
+    trasmission_data.setPushInfo("", 2, "", "", "", "", "", "", 1)
 
     igt_message = IGtSingleMessage()
     igt_message.isOffline = True
